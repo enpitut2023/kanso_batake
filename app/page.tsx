@@ -1,20 +1,13 @@
-import { paperData } from "@/constants"
-import Link from "next/link"
+import Reviews from "@/components/Reviews"
+import { Suspense } from "react"
+import Loading from "./loading"
 
 export default async function Home() {
   return (
     <div>
-        {
-          paperData.map((paper) => {
-            return (
-              <ul>
-                <li>title: {paper.title}</li>
-                <li>tldr: {paper.tldr}</li>
-                <li><Link href={`review/${paper.id}`}>感想はこちら</Link></li>
-              </ul>
-            )
-          })
-        }
+      <Suspense fallback={<Loading />}>
+        <Reviews />
+      </Suspense>
     </div>
   )
 }
