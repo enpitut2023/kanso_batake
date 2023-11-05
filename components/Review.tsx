@@ -3,7 +3,6 @@ import {
 	Card,
 	CardContent,
 	CardDescription,
-	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card"
@@ -15,7 +14,7 @@ const Review = (
 	return (
 			<Card>
 				<CardHeader>
-					<CardTitle className="truncate">
+					<CardTitle className="tru">
 						{paperTitle}
 					</CardTitle>
 					<CardDescription>

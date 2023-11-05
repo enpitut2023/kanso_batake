@@ -1,11 +1,10 @@
-import firebaseApp from "@/lib/firebase/config"
+"use server"
+
 import { collection, getDocs, setDoc, doc, query } from "firebase/firestore"
 import db from "@/lib/firebase/store"
-import { reviewData, reviewType } from "@/constants"
+import { reviewType } from "@/constants"
 
 export async function getAllReviews() {
-    return reviewData
-
     const col = query(collection(db, "reviews"))
 
     let result: reviewType[] = []
