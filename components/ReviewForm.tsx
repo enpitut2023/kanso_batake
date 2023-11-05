@@ -51,7 +51,7 @@ export function ReviewForm() {
 
     const reviewData: reviewType = {
       id: Date.now().toString(),
-      contents: data.ReviewContents,
+      contents: data.ReviewContents.replaceAll("\n", "\\n"),
       paperTitle: data.PaperTitle,
       reviewerName: data.ReviewerName
     }
