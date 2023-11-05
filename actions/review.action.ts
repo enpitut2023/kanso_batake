@@ -1,25 +1,22 @@
-import firebaseApp from "@/libs/firebase/config"
+import firebaseApp from "@/lib/firebase/config"
 import { collection, getDocs, setDoc, doc, query } from "firebase/firestore"
-import db from "@/libs/firebase/store"
-
-type review = {
-    id: string
-    paperTitle: string
-    contents: string
-}
+import db from "@/lib/firebase/store"
+import { reviewData, reviewType } from "@/constants"
 
 export async function getAllReviews() {
+    return reviewData
+
     const col = query(collection(db, "reviews"))
 
-    let result: review[] = []
+    let result: reviewType[] = []
     const allReviewsSnapshot = await getDocs(col)
     allReviewsSnapshot.forEach((doc) => {
-        result.push(doc.data() as review)
+        result.push(doc.data() as reviewType)
     })
 
     return result
 }
 
-export async function setReview(reviewData: review) {
+export async function setReview(reviewData: reviewType) {
     await setDoc(doc(db, `reviews/${reviewData.id}`), reviewData)
 }
