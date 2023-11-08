@@ -4,12 +4,13 @@ import Review from './Review'
 
 const Reviews = async () => {
 	const reviewsData = await getAllReviews()
+	
   return (
-    <div>
+    <div className="flex flex-col gap-2">
 			{
 				reviewsData.map((review) => {
 					return (
-						<Review id={review.id} paperTitle={review.paperTitle} contents={review.contents} />
+						<Review key={review.id} id={review.id} paperTitle={review.paperTitle} contents={review.contents} reviewerName={review.reviewerName} />
 					)
 				})
 			}

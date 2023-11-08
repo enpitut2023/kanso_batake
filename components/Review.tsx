@@ -3,30 +3,27 @@ import {
 	Card,
 	CardContent,
 	CardDescription,
-	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card"
 
-
 const Review = (
-	{ id, paperTitle, contents }: { id: string, paperTitle: string, contents: string }
+	{ id, paperTitle, contents, reviewerName }: { id: string, paperTitle: string, contents: string, reviewerName: string }
 ) => {
 	return (
-		<>
-			<Card key={id}>
+			<Card>
 				<CardHeader>
-					<CardTitle>
+					<CardTitle className="truncate leading-normal">
 						{paperTitle}
 					</CardTitle>
+					<CardDescription>
+						Reviewer: {reviewerName}
+					</CardDescription>
 				</CardHeader>
-				<CardContent>
-					<text>
+				<CardContent className='break-words whitespace-pre-line'>
 						{contents}
-					</text>
 				</CardContent>
 			</Card>
-		</>
 	)
 }
 
