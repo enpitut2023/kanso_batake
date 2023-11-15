@@ -6,7 +6,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card"
-import { cn } from '@/lib/utils'
+import Link from 'next/link'
 
 const Review = (
 	{ id, paperTitle, contents, reviewerName }: { id: string, paperTitle: string, contents: string, reviewerName: string }
@@ -14,14 +14,14 @@ const Review = (
 	return (
 			<Card>
 				<CardHeader>
-					<CardTitle className="tru">
+					<CardTitle className="truncate leading-normal">
 						{paperTitle}
 					</CardTitle>
 					<CardDescription>
-						Reviewer: {reviewerName}
+						<Link href="/user"> Reviewer: {reviewerName}</Link>
 					</CardDescription>
 				</CardHeader>
-				<CardContent className='break-words'>
+				<CardContent className='break-words whitespace-pre-line'>
 						{contents}
 				</CardContent>
 			</Card>
