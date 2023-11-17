@@ -1,3 +1,4 @@
+import ReviewHeader from '@/components/ReviewerHeader'
 import ReviewsByUser from '@/components/ReviewsByUser'
 import React from 'react'
 
@@ -6,6 +7,7 @@ const page = async(
 ) => {
   return (
     <div>
+      <ReviewHeader userId={userId}/>
       <ReviewsByUser userId={userId} />
     </div>
   )

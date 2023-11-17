@@ -6,11 +6,13 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card"
-import { userType } from '@/constants'
+import { miuraData, userType } from '@/constants'
 
 const ReviewHeader = (
-	{ user } : {user:userType}
+	{ userId } : {userId: string}
 ) => {
+	const user = miuraData
+	
 	return ( 
 	<Card>
 		<CardHeader>
