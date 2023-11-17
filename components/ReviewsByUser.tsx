@@ -2,7 +2,7 @@ import { fetchReviewsByUser } from '@/actions/review.action'
 import React from 'react'
 import Review from './Review'
 
-const ReviewsByUser = async (userId: string) => {
+const ReviewsByUser = async ({ userId } : { userId: string }) => {
 	const reviewsData = await fetchReviewsByUser(userId)
 	
   return (
