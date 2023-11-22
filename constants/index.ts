@@ -11,6 +11,12 @@ export type reviewType = {
     reviewerName: string;
 }
 
+export type postType = {
+    id: string;
+    contents: string;
+    paperTitle: string;
+}
+
 export type userType = {
     id: string;
     name: string;
