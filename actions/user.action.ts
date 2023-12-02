@@ -6,11 +6,11 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { revalidatePath, unstable_noStore } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function fetchUser(userId: string) {
+export async function fetchUser(userId: string){
   try {
     const userData = await getDoc(doc(db, `users/${userId}`))
     if (userData.exists()) {
-      return userData.data()
+      return userData.data() as userType
     } else {
       throw new Error("Failed to fetch user.")
     }
@@ -27,7 +27,4 @@ export async function setUser(userData: userType) {
   } catch (error) {
     throw new Error("Failed to set user.")
   }
-
-  revalidatePath('/onboading');
-  redirect("/")
 }

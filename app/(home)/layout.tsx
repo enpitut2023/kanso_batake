@@ -1,7 +1,7 @@
 import { ClerkProvider } from '@clerk/nextjs'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import "./globals.css"
+import "../globals.css"
+import Header from '@/components/Header'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -18,8 +18,9 @@ export default function RootLayout({
   return (
     <ClerkProvider >
       <html lang="en">
-        <body>
-          <div className='container max-w-5xl'>
+        <body className='flex flex-col'>
+          <Header />
+          <div className='container max-w-5xl mt-20'>
             {children}
           </div>
         </body>

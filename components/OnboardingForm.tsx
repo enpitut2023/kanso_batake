@@ -32,6 +32,7 @@ import {
 import { cn } from "@/lib/utils"
 import { setUser } from "@/actions/user.action"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
+import { useRouter } from "next/navigation"
 
 const FormSchema = z.object({
   username: z.string().min(1, {
@@ -74,6 +75,7 @@ const frameworks = [
 
 export function OnboadingForm({ userId }: { userId: string }) {
   const isLoading = useRef(false)
+  const router = useRouter()
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -92,6 +94,7 @@ export function OnboadingForm({ userId }: { userId: string }) {
     }
     
     await setUser(userData)
+    router.push("/")
   }
 
   return (
