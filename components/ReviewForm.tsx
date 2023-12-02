@@ -30,7 +30,7 @@ const FormSchema = z.object({
   }),
 })
 
-export function ReviewForm() {
+export function ReviewForm({ userId } : { userId: string }) {
   const isLoading = useRef(false)
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -52,7 +52,7 @@ export function ReviewForm() {
     }
 
     try {
-      await setReview(reviewData)
+      await setReview(userId, reviewData)
     } catch (error) {
       console.log(error)
     }
