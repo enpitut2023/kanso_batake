@@ -14,12 +14,9 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "./ui/textarea"
-import { setReview } from "@/actions/review.action"
-import { reviewType, userType } from "@/constants"
-import { useRef, useState } from "react"
+import { userType } from "@/constants"
+import { useRef } from "react"
 import { Check, ChevronsUpDown, Loader2 } from "lucide-react"
-import CalcelCreateReview from "./CancelCreateReview"
 import {
   Command,
   CommandEmpty,
@@ -49,7 +46,7 @@ const FormSchema = z.object({
   role: z.string().min(1, {
     message: "学生/教員を選択してください。",
   }),
-  url: z.string()
+  url: z.string().optional()
 })
 
 const frameworks = [
@@ -91,9 +88,10 @@ export function OnboadingForm({ userId }: { userId: string }) {
       affiliation: [data.affiliation],
       field: [data.field],
       role: data.role,
-      url: [data.url]
+      works: [data.url || ""]
     }
-    console.log(userData)
+    
+    await setUser(userData)
   }
 
   return (
@@ -200,7 +198,7 @@ export function OnboadingForm({ userId }: { userId: string }) {
                 </PopoverTrigger>
                 <PopoverContent className="w-[50vw] p-0">
                   <Command>
-                    <CommandInput placeholder="Search affiliation..." />
+                    <CommandInput placeholder="Search field..." />
                     <CommandEmpty>Not found.</CommandEmpty>
                     <CommandGroup>
                       {frameworks.map((framework) => (
@@ -208,7 +206,7 @@ export function OnboadingForm({ userId }: { userId: string }) {
                           value={framework.label}
                           key={framework.value}
                           onSelect={() => {
-                            form.setValue("affiliation", framework.value)
+                            form.setValue("field", framework.value)
                           }}
                         >
                           <Check
@@ -276,7 +274,6 @@ export function OnboadingForm({ userId }: { userId: string }) {
             ) : (
               <div className="flex flex-row gap-3">
                 <Button type="submit" >Submit</Button>
-                <CalcelCreateReview />
               </div>
             )
         }

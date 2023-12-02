@@ -3,7 +3,8 @@
 import { userType } from "@/constants";
 import db from "@/lib/firebase/store";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { unstable_noStore } from "next/cache";
+import { revalidatePath, unstable_noStore } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function fetchUser(userId: string) {
   try {
@@ -20,9 +21,13 @@ export async function fetchUser(userId: string) {
 }
 
 export async function setUser(userData: userType) {
+  console.log(userData)
   try {
-    await setDoc(doc(db, `reviews/${userData.id}`), userData)
+    await setDoc(doc(db, `users/${userData.id}`), userData)
   } catch (error) {
     throw new Error("Failed to set user.")
   }
+
+  revalidatePath('/onboading');
+  redirect("/")
 }
