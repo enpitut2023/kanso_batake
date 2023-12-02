@@ -24,7 +24,7 @@ export type userType = {
     field: string[];
     role: string;
     // いったん　Student or Teacher
-    reviews: reviewType[];
+    works: string[];
 }
 
 export const paperData: paperInterface[] = [
@@ -148,5 +148,5 @@ export const miuraData: userType = {
     affiliation: ["適応情報処理研究室", "情報理工学位プログラム"],
     field: ["Machine Learning", "Deep Learning"],
     role: "Student",
-    reviews: reviewData_miura
+    works: []
 }
