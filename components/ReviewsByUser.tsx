@@ -5,6 +5,10 @@ import Review from './Review'
 const ReviewsByUser = async ({ userId } : { userId: string }) => {
 	const reviewsData = await fetchReviewsByUser(userId)
 	
+	if(reviewsData.length == 0){
+		return <div>No Reviews.</div>
+	}
+	
   return (
     <div className="flex flex-col gap-2">
 			{
