@@ -6,11 +6,12 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card"
-import { userType } from '@/constants'
+import { fetchUser } from '@/actions/user.action'
 
-const ReviewHeader = (
-	{ user } : {user:userType}
+const ReviewHeader = async (
+	{ userId } : {userId: string}
 ) => {
+	const user = await fetchUser(userId)
 	return ( 
 	<Card>
 		<CardHeader>
@@ -18,18 +19,13 @@ const ReviewHeader = (
 				{user.name}
 			</CardTitle>
 			<CardDescription>
-				<div>
 					{user.affiliation.map((institution) => {
 							return (<p>{institution}</p>)
 						})}
-				</div>
-                
-        <div>
 					{user.field.map((f) => {
 							return (<p>{f}</p>)
 						})}
-				</div>
-                <p>{ user.role }</p>
+          <p>{ user.role }</p>
 			</CardDescription>
 		</CardHeader>
 		<CardContent className='break-words whitespace-pre-line'>
