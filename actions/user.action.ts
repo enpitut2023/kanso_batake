@@ -21,7 +21,6 @@ export async function fetchUser(userId: string){
 }
 
 export async function setUser(userData: userType) {
-  console.log(userData)
   try {
     await setDoc(doc(db, `users/${userData.id}`), userData)
   } catch (error) {
