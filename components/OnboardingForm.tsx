@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -12,27 +12,34 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { userType } from "@/constants"
-import { useRef } from "react"
-import { Check, ChevronsUpDown, Loader2 } from "lucide-react"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { affiliations, fields, userType } from "@/constants";
+import { useRef } from "react";
+import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { cn } from "@/lib/utils"
-import { setUser } from "@/actions/user.action"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
-import { useRouter } from "next/navigation"
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { setUser } from "@/actions/user.action";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { useRouter } from "next/navigation";
+import { ScrollArea } from "./ui/scroll-area";
 
 const FormSchema = z.object({
   username: z.string().min(1, {
@@ -47,42 +54,19 @@ const FormSchema = z.object({
   role: z.string().min(1, {
     message: "学生/教員を選択してください。",
   }),
-  url: z.string().optional()
-})
-
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-]
+  url: z.string().optional(),
+});
 
 export function OnboadingForm({ userId }: { userId: string }) {
-  const isLoading = useRef(false)
-  const router = useRouter()
+  const isLoading = useRef(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-  })
+  });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    isLoading.current = true
+    isLoading.current = true;
 
     const userData: userType = {
       id: userId,
@@ -90,11 +74,11 @@ export function OnboadingForm({ userId }: { userId: string }) {
       affiliation: [data.affiliation],
       field: [data.field],
       role: data.role,
-      works: [data.url || ""]
-    }
-    
-    await setUser(userData)
-    router.push("/")
+      works: [data.url || ""],
+    };
+
+    await setUser(userData);
+    router.push("/");
   }
 
   return (
@@ -132,9 +116,9 @@ export function OnboadingForm({ userId }: { userId: string }) {
                       )}
                     >
                       {field.value
-                        ? frameworks.find(
-                          (framework) => framework.value === field.value
-                        )?.label
+                        ? affiliations.find(
+                            (affiliation) => affiliation.value === field.value
+                          )?.label
                         : "所属を選択"}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
@@ -145,25 +129,27 @@ export function OnboadingForm({ userId }: { userId: string }) {
                     <CommandInput placeholder="Search affiliation..." />
                     <CommandEmpty>Not found.</CommandEmpty>
                     <CommandGroup>
-                      {frameworks.map((framework) => (
-                        <CommandItem
-                          value={framework.label}
-                          key={framework.value}
-                          onSelect={() => {
-                            form.setValue("affiliation", framework.value)
-                          }}
-                        >
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              framework.value === field.value
-                                ? "opacity-100"
-                                : "opacity-0"
-                            )}
-                          />
-                          {framework.label}
-                        </CommandItem>
-                      ))}
+                      <ScrollArea className="h-[50vh] w-full rounded-md border">
+                        {affiliations.map((affiliation) => (
+                          <CommandItem
+                            value={affiliation.label}
+                            key={affiliation.value}
+                            onSelect={() => {
+                              form.setValue("affiliation", affiliation.value);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                affiliation.value === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {affiliation.label}
+                          </CommandItem>
+                        ))}
+                      </ScrollArea>
                     </CommandGroup>
                   </Command>
                 </PopoverContent>
@@ -191,9 +177,7 @@ export function OnboadingForm({ userId }: { userId: string }) {
                       )}
                     >
                       {field.value
-                        ? frameworks.find(
-                          (framework) => framework.value === field.value
-                        )?.label
+                        ? fields.find((f) => f.value === field.value)?.label
                         : "研究分野を選択"}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
@@ -204,25 +188,27 @@ export function OnboadingForm({ userId }: { userId: string }) {
                     <CommandInput placeholder="Search field..." />
                     <CommandEmpty>Not found.</CommandEmpty>
                     <CommandGroup>
-                      {frameworks.map((framework) => (
-                        <CommandItem
-                          value={framework.label}
-                          key={framework.value}
-                          onSelect={() => {
-                            form.setValue("field", framework.value)
-                          }}
-                        >
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              framework.value === field.value
-                                ? "opacity-100"
-                                : "opacity-0"
-                            )}
-                          />
-                          {framework.label}
-                        </CommandItem>
-                      ))}
+                      <ScrollArea className="h-[50vh] w-full rounded-md border">
+                        {fields.map((f) => (
+                          <CommandItem
+                            value={f.label}
+                            key={f.value}
+                            onSelect={() => {
+                              form.setValue("field", f.value);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                f.value === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {f.label}
+                          </CommandItem>
+                        ))}
+                      </ScrollArea>
                     </CommandGroup>
                   </Command>
                 </PopoverContent>
@@ -231,7 +217,6 @@ export function OnboadingForm({ userId }: { userId: string }) {
             </FormItem>
           )}
         />
-
 
         <FormField
           control={form.control}
@@ -259,7 +244,7 @@ export function OnboadingForm({ userId }: { userId: string }) {
           name="url"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>URL</FormLabel>
+              <FormLabel>実績が分かるリンク</FormLabel>
               <FormControl>
                 <Input placeholder="URLを入力してください" {...field} />
               </FormControl>
@@ -267,20 +252,17 @@ export function OnboadingForm({ userId }: { userId: string }) {
             </FormItem>
           )}
         />
-        {
-          isLoading.current ?
-            (
-              <Button disabled>
-                <Loader2 className="animate-spin" />
-                Please wait
-              </Button>
-            ) : (
-              <div className="flex flex-row gap-3">
-                <Button type="submit" >Submit</Button>
-              </div>
-            )
-        }
+        {isLoading.current ? (
+          <Button disabled>
+            <Loader2 className="animate-spin" />
+            Please wait
+          </Button>
+        ) : (
+          <div className="flex flex-row gap-3">
+            <Button type="submit">Submit</Button>
+          </div>
+        )}
       </form>
     </Form>
-  )
+  );
 }

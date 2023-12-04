@@ -20,7 +20,7 @@ export default function RootLayout({
       <html lang="en">
         <body className='flex flex-col'>
           <Header />
-          <div className='container max-w-5xl mt-20'>
+          <div className='container max-w-5xl mt-20 pb-5'>
             {children}
           </div>
         </body>
