@@ -30,7 +30,7 @@ const FormSchema = z.object({
   }),
 })
 
-export function ReviewForm({ userId } : { userId: string }) {
+export function ReviewForm({ userId, userName} : { userId: string , userName: string}) {
   const isLoading = useRef(false)
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -48,7 +48,8 @@ export function ReviewForm({ userId } : { userId: string }) {
       id: Date.now().toString(),
       contents: data.ReviewContents,
       paperTitle: data.PaperTitle,
-      reviewerName: ""
+      reviewerName: userName,
+      createdBy: userId
     }
 
     try {
