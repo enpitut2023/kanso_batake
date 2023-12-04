@@ -12,7 +12,6 @@ const ReviewHeader = async (
 	{ userId } : {userId: string}
 ) => {
 	const user = await fetchUser(userId)
-	
 	return ( 
 	<Card>
 		<CardHeader>
