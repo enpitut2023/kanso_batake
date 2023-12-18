@@ -17,6 +17,7 @@ import icon from "@/public/icon.png"
 const Review = (
 	{ reviewData }: { reviewData: reviewType }
 ) => {
+
 	return (
 		<Card>
 			<CardHeader>
@@ -48,8 +49,19 @@ const Review = (
 					}
 				<Separator />
 			</CardHeader>
+            <CardContent className="flex gap-2">
+            {
+                reviewData.tags ? reviewData.tags.map((tag) => {
+                    return (
+                        <Link href={`?tag=${tag}`} className="text-blue-400 hover:text-blue-600">
+                            #{tag}
+                        </Link>
+                    )
+                }) : ""
+            }
+            </CardContent>
 			<CardContent>
-                 <Link href={`/user/${reviewData.createdBy}`} className="flex text-blue-400 hover:text-blue-500 underline flex gap-2">
+                 <Link href={`/user/${reviewData.createdBy}`} className="flex text-blue-400 hover:text-blue-600 underline flex gap-2">
                     <Image src={icon} alt="Icon Image" className="rounded" width={24} height={24}/>
                     {reviewData.reviewerName}
                 </Link>
@@ -57,6 +69,7 @@ const Review = (
 			<CardContent className='break-words whitespace-pre-line'>
 				{reviewData.contents}
 			</CardContent>
+            
 		</Card>
 	)
 }
