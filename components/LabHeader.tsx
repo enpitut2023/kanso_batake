@@ -8,30 +8,28 @@ import {
 } from "@/components/ui/card"
 
 import { fetchUser } from '@/actions/user.action'
+import { fetchUserIdsByLabId } from '@/actions/user.action'
+import { fetchUsers } from '@/actions/user.action'
+import { userType } from '@/constants'
+
 
 const LabHeader = async (
-	{ userId } : {userId: string}
+	{ labId } : {labId: string}
 ) => {
-	const user = await fetchUser(userId)
+    const userIds:string[] = await fetchUserIdsByLabId(labId)
+	const users:userType[] = await fetchUsers(userIds)
   
 	return ( 
 	<Card>
 		<CardHeader>
 			<CardTitle className="truncate leading-normal">
-				{user.affiliation}
+				{labId}
 			</CardTitle>
-			{/* <div className='text-sm text-muted-foreground'>
-				{user.affiliation.map((institution) => {
-						return (<p key={institution}>所属: {institution}</p>)
+			<div className='text-sm text-muted-foreground'>
+					所属学生:{users.map((user) => {
+						return (<p key={user.id}> {user.name} </p>)
 					})}
-				{user.field.map((f) => {
-						return (<p key={f}>分野: {f}</p>)
-					})}
-				<p>役職: { user.role }</p>
-				{user.works.map((work) => {
-						return (<p key={work}>URL: <a href={work} target='_blank'>{work}</a></p>)
-					})}
-			</div> */}
+			</div>
 
 		</CardHeader>
 		<CardContent className='break-words whitespace-pre-line'>
