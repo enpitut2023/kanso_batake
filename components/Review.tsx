@@ -61,7 +61,7 @@ const Review = (
             }
             </CardContent>
 			<CardContent>
-                 <Link href={`/user/${reviewData.createdBy}`} className="flex text-blue-400 hover:text-blue-600 underline flex gap-2">
+                 <Link href={`/user/${reviewData.createdBy}`} className="flex text-blue-400 hover:text-blue-600 underline gap-2">
                     <Image src={icon} alt="Icon Image" className="rounded" width={24} height={24}/>
                     {reviewData.reviewerName}
                 </Link>
