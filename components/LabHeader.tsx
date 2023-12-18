@@ -26,7 +26,7 @@ const LabHeader = async (
 				{labId}
 			</CardTitle>
 			<div className='text-sm text-muted-foreground'>
-					所属学生:{users.map((user) => {
+					所属:{users.map((user) => {
 						return (<p key={user.id}> {user.name} </p>)
 					})}
 			</div>
