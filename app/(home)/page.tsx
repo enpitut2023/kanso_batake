@@ -2,7 +2,6 @@ import Reviews from "@/components/Reviews"
 import { Suspense } from "react"
 import ReviewPostButton from "@/components/CreateReview"
 import Search from "@/components/TagSearchBar"
-import { setAllLabs } from "@/actions/lab.action";
 
 export default async function Home({
     searchParams,
