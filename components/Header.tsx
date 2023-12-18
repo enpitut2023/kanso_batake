@@ -25,11 +25,11 @@ const Header = async () => {
           感想畑
         </Link>
         <div className='flex flex-row gap-3'>
-          <Link href={`/my-lab/${user.id}`}>
-            マイラボ
-          </Link>
           <Link href={`/user/${user.id}`}>
             マイページ
+          </Link>
+          <Link href={`/my-lab/${user.id}`}>
+            マイラボ
           </Link>
           <SignOutButton>
             サインアウト
