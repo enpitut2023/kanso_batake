@@ -11,14 +11,14 @@ const ReviewsByUser = async ({ userId } : { userId: string }) => {
 	
   return (
     <div className="flex flex-col gap-2">
-			{
-				reviewsData.map((review) => {
-					return (
-						<Review key={review.id} reviewData={review} />
-					)
-				})
-			}
-		</div>
+        {
+            reviewsData.map((review) => {
+                return (
+                    <Review key={review.id} reviewData={review} />
+                )
+            })
+        }
+	</div>
   )
 }
 
