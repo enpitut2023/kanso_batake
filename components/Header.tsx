@@ -4,8 +4,8 @@ import Link from 'next/link'
 import React from 'react'
 
 const Header = async () => {
-  const user = await currentUser();
-  if (!user) return (
+  const _user = await currentUser();
+  if (!_user) return (
     <header className='fixed z-50 w-screen justify-center border-b'>
       <div className='container flex flex-row max-w-5xl justify-between p-5 bg-white dark:bg-black'>
         <Link href="/">
@@ -17,6 +17,7 @@ const Header = async () => {
       </div>
     </header>
   )
+  const user = await fetchUser(_user.id)
   
   return (
     <header className='fixed z-50 w-screen justify-center border-b'>
@@ -28,7 +29,7 @@ const Header = async () => {
           <Link href={`/user/${user.id}`}>
             マイページ
           </Link>
-          <Link href={`/my-lab/${user.id}`}>
+          <Link href={`/lab/${user.affiliation}`}>
             マイラボ
           </Link>
           <SignOutButton>
