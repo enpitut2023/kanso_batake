@@ -38,6 +38,11 @@ export type userType = {
   works: string[];
 };
 
+export const role = [
+    "学生",
+    "教員",
+]
+
 export const affiliations = [
   {
     value: "カオス研究室",
