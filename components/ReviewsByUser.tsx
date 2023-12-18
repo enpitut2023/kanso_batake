@@ -10,6 +10,14 @@ const ReviewsByUser = async ({ userId, tag } : { userId: string, tag?:string }) 
 	}
 	
   return (
+    <>
+    {
+        tag ? (
+            <div className="p-6">
+                <p>{tag}</p>
+            </div>
+        ) : null
+    }
     <div className="flex flex-col gap-2">
         {
             reviewsData.map((review) => {
@@ -19,6 +27,7 @@ const ReviewsByUser = async ({ userId, tag } : { userId: string, tag?:string }) 
             })
         }
 	</div>
+    </>
   )
 }
 

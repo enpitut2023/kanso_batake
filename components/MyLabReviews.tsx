@@ -12,11 +12,20 @@ const MyLabReviews = async ({ labId, tag }: { labId: string, tag?: string }) => 
   }
 
   return (
-    <div className="flex flex-col gap-2">
-      {reviewsData.map((review) => {
-        return <Review key={review.id} reviewData={review} />;
-      })}
-    </div>
+    <>
+        {
+            tag ? (
+                <>
+                    <p>{tag}</p>
+                </>
+            ) : null
+        }
+        <div className="flex flex-col gap-2">
+        {reviewsData.map((review) => {
+            return <Review key={review.id} reviewData={review} />;
+        })}
+        </div>
+    </>
   );
 };
 
