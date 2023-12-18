@@ -49,15 +49,6 @@ const Review = (
 					}
 				<Separator />
 			</CardHeader>
-			<CardContent>
-                 <Link href={`/user/${reviewData.createdBy}`} className="flex text-blue-400 hover:text-blue-600 underline flex gap-2">
-                    <Image src={icon} alt="Icon Image" className="rounded" width={24} height={24}/>
-                    {reviewData.reviewerName}
-                </Link>
-			</CardContent>
-			<CardContent className='break-words whitespace-pre-line'>
-				{reviewData.contents}
-			</CardContent>
             <CardContent className="flex gap-2">
             {
                 reviewData.tags ? reviewData.tags.map((tag) => {
@@ -69,6 +60,16 @@ const Review = (
                 }) : ""
             }
             </CardContent>
+			<CardContent>
+                 <Link href={`/user/${reviewData.createdBy}`} className="flex text-blue-400 hover:text-blue-600 underline flex gap-2">
+                    <Image src={icon} alt="Icon Image" className="rounded" width={24} height={24}/>
+                    {reviewData.reviewerName}
+                </Link>
+			</CardContent>
+			<CardContent className='break-words whitespace-pre-line'>
+				{reviewData.contents}
+			</CardContent>
+            
 		</Card>
 	)
 }
