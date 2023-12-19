@@ -45,6 +45,10 @@ export const role = [
 
 export const affiliations = [
   {
+    value: "小野研究室",
+    label: "小野研究室",
+  },
+  {
     value: "カオス研究室",
     label: "カオス研究室",
   },
