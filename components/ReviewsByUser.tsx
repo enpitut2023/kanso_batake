@@ -13,8 +13,8 @@ const ReviewsByUser = async ({ userId, tag } : { userId: string, tag?:string }) 
     <>
     {
         tag ? (
-            <div className="p-6">
-                <p>{tag}</p>
+            <div className="flex gap-1 m-1 text-muted-foreground">
+                Searching in : <p>{tag}</p>
             </div>
         ) : null
     }
