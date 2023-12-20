@@ -2,7 +2,7 @@
 
 import { collection, getDocs, setDoc, doc, query, orderBy, where } from "firebase/firestore"
 import db from "@/lib/firebase/store"
-import { LabType, affiliations } from "@/constants"
+import { labType, affiliations } from "@/constants"
 import { unstable_noStore } from "next/cache";
 
 export const setAllLabs = async () => {
@@ -15,26 +15,15 @@ export const setAllLabs = async () => {
   }
 }
 
-export async function getAllLabs() {
+export async function fetchAllLabs() {
   unstable_noStore();
-  const col = query(collection(db, "labs"));
+  const col = query(collection(db, "labs"), orderBy("value", "desc"));
 
-  let result: LabType[] = [];
+  let result: labType[] = [];
   const allReviewsSnapshot = await getDocs(col);
   allReviewsSnapshot.forEach((doc) => {
-    result.push(doc.data() as LabType);
+    result.push(doc.data() as labType);
   });
-  console.log(result)
+  console.log(result);
   return result;
-}
-
-//わからん。
-export const get_All_Lab_names=async(lablis: LabType[])=>{
-  const ret=[]
-  lablis.forEach(
-    (lab)=>{
-      ret.push(lab);
-    }
-  )
-  return ret;
 }
