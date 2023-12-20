@@ -4,6 +4,11 @@ type paperInterface = {
   tldr: string;
 };
 
+export type labType ={
+    value: string;
+}
+
+
 export type reviewType = {
   id: string;
   contents: string;
