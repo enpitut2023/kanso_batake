@@ -12,9 +12,9 @@ const Header = async () => {
           <Link href="/">
             感想畑
           </Link>
-          <Link href="https://forms.gle/PrKwapdJXZniqSZs6">
+          <a href="https://forms.gle/PrKwapdJXZniqSZs6" target='_blank'>
             お問い合わせはこちら
-          </Link>
+          </a>
         </div>
         <Link href={`/sign-in`}>
           サインイン
@@ -31,8 +31,11 @@ const Header = async () => {
           <Link href="/">
             感想畑
           </Link>
-          <Link href="https://forms.gle/PrKwapdJXZniqSZs6">
+          <a href="https://forms.gle/PrKwapdJXZniqSZs6" target='_blank'>
             お問い合わせはこちら
+          </a>
+          <Link href="/lab">
+            研究室一覧
           </Link>
         </div>
         <div className='flex flex-row gap-3'>
