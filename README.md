@@ -12,10 +12,10 @@ URL: https://kanso-batake.vercel.app/
 「より簡単に論文のレビューにアクセスできるよう」になります。
 
 # members
-土居亮斗
-赤田真由
-三浦隼←Scrum master
-柴尾直紀
-関拓己
-大作春輝←Product Owner
-山岨寛門
+土居亮斗<br>
+赤田真由<br>
+三浦隼←Scrum master<br>
+柴尾直紀<br>
+関拓己<br>
+大作春輝←Product Owner<br>
+山岨寛門<br>
