@@ -108,7 +108,7 @@ export function ReviewForm({
       link: data.link,
       reviewerName: userName,
       createdBy: userId,
-      tags: data.Tags.split(","),
+      tags: delEmpty_tag(data.Tags),
     };
 
     try {
@@ -311,4 +311,12 @@ export function ReviewForm({
       </form>
     </Form>
   );
+}
+// タグ配列tagsに空文字列があればそれを削除する
+function delEmpty_tag(tag: string): string[] {
+  let tags = tag.split(",")
+  if ((tags && tags.length !== 0)){
+    tags = tags.filter(item => item.trim() !== '');
+  }
+  return tags
 }
