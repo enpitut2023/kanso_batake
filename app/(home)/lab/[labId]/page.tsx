@@ -11,8 +11,8 @@ const page = async(
   const labId_decoded = urlDecode(labId)
   return (
     <div className='flex flex-col gap-5'>
-      <LabHeader labId={labId_decoded}/>
       <Search placeholder="タグを入力"/>
+      <LabHeader labId={labId_decoded}/>
       <MyLabReviews labId={labId_decoded} tag={searchParams?.tag}/>
     </div>
   )
