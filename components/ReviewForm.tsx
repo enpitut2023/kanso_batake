@@ -22,6 +22,8 @@ import { useRef } from "react";
 import { Loader2 } from "lucide-react";
 import CalcelCreateReview from "./CancelCreateReview";
 
+import { delEmpty_tag } from "@/lib/utils";
+
 // フォームのバリデーションスキーマを定義
 const FormSchema = z.object({
   // 各フィールドにバリデーションルールを設定
@@ -311,12 +313,4 @@ export function ReviewForm({
       </form>
     </Form>
   );
-}
-// タグ配列tagsに空文字列があればそれを削除する
-function delEmpty_tag(tag: string): string[] {
-  let tags = tag.split(",")
-  if ((tags && tags.length !== 0)){
-    tags = tags.filter(item => item.trim() !== '');
-  }
-  return tags
 }
