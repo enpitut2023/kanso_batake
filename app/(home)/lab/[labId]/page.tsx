@@ -2,6 +2,8 @@ import LabHeader from '@/components/LabHeader'
 import MyLabReviews from '@/components/MyLabReviews'
 import { urlDecode } from '@/lib/utils'
 import React from 'react'
+import Search from "@/components/TagSearchBar"
+import { Suspense } from "react"
 
 const page = async(
   { params: { labId }, searchParams } : { params : { labId: string }, searchParams?: { tag?: string }}
@@ -9,6 +11,7 @@ const page = async(
   const labId_decoded = urlDecode(labId)
   return (
     <div className='flex flex-col gap-5'>
+      <Search placeholder="タグを入力"/>
       <LabHeader labId={labId_decoded}/>
       <MyLabReviews labId={labId_decoded} tag={searchParams?.tag}/>
     </div>
