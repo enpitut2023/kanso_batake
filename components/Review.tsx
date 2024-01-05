@@ -1,4 +1,5 @@
 import React from "react";
+import ReactMarkDown from 'react-markdown';
 import {
   Card,
   CardContent,
@@ -74,8 +75,8 @@ const Review = ({ reviewData }: { reviewData: reviewType }) => {
           {reviewData.reviewerName}
         </Link>
       </CardContent>
-      <CardContent className="break-words whitespace-pre-line">
-        {reviewData.contents}
+      <CardContent className="break-words whitespace-pre-line prose">
+        <ReactMarkDown>{reviewData.contents}</ReactMarkDown>
       </CardContent>
     </Card>
   );
