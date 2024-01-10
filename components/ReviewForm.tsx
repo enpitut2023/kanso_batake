@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "./ui/textarea";
 import { setReview } from "@/actions/review.action";
 import { paperData, reviewType } from "@/constants";
-import React, { useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 import CalcelCreateReview from "./CancelCreateReview";
 import { fetchPaperByDOI, paperDetailsType, paperErrorType } from "@/actions/paper.action";
@@ -109,6 +109,8 @@ export function ReviewForm({
 
   const onChageHandler = useDebouncedCallback(async(e) => {
     const paperData = await fetchPaperByDOI(e.target.value)
+    form.setValue("title", paperData.title)
+    console.log(paperData)
     setPaper(paperData)
   }, 300)
 
@@ -135,7 +137,7 @@ export function ReviewForm({
                         !field.value && "text-muted-foreground"
                       )}
                     >
-                      {paper ? paper.title : "Search paper by DOI..."}
+                      {form.getValues("title") ? form.getValues("title") : "Search paper by DOI..."}
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
