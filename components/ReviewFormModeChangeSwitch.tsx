@@ -12,9 +12,9 @@ export function SwitchDemo() {
 
   const handleSwitchChange = (e: any) => {
     if(e) {
-      params.set("mode", "manual")
-    } else {
       params.set("mode", "auto")
+    } else {
+      params.set("mode", "manual")
     }
 
     replace(`${pathname}?${params.toString()}`);
@@ -23,8 +23,8 @@ export function SwitchDemo() {
   return (
     <div className="relative w-full mb-5">
       <div className="flex items-center space-x-2 absolute -top-5 right-0" >
-        <Switch id="mode-switch" onCheckedChange={handleSwitchChange} checked={params.get("mode") === "manual"} />
-        <Label htmlFor="mode-switch">手動で入力</Label>
+        <Switch id="mode-switch" onCheckedChange={handleSwitchChange} checked={params.get("mode") !== "manual"} />
+        <Label htmlFor="mode-switch">DOIから情報を取得</Label>
     </div>
     </div>
   )
