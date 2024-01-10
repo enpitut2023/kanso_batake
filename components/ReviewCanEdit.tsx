@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react";
 import {
   Card,
@@ -16,9 +18,9 @@ import { IoIosPaper } from "react-icons/io";
 import icon from "@/public/icon.png";
 import { useRouter } from 'next/navigation'
 
-const Review = ({ reviewData }: { reviewData: reviewType }) => {
-  const router = useRouter()
 
+const Review = ({ reviewData, userId}: { reviewData: reviewType, userId:string }) => {
+  const router = useRouter()
   const clickHandler = () => {
     router.push("/reedit")
   }
@@ -50,9 +52,11 @@ const Review = ({ reviewData }: { reviewData: reviewType }) => {
           </div>
         )}
         <Separator />
-        <Button onClick={clickHandler}>
-            + Create New Review
-        </Button>
+        {userId == reviewData.createdBy && (
+            <Button onClick={clickHandler}>
+                投稿を編集する
+            </Button>
+        )} 
       </CardHeader>
 			{ (reviewData.tags && reviewData.tags.length !== 0) &&
       <CardContent className="flex gap-2">
