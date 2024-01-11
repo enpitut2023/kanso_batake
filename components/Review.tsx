@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react";
 import {
   Card,
@@ -6,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Button } from "./ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import { Separator } from "./ui/separator";
@@ -13,8 +16,13 @@ import { reviewType } from "@/constants";
 import { SiDoi } from "react-icons/si";
 import { IoIosPaper } from "react-icons/io";
 import icon from "@/public/icon.png";
+import { useRouter } from 'next/navigation'
 
-const Review = ({ reviewData }: { reviewData: reviewType }) => {
+const Review = ({ reviewData, userId }: { reviewData: reviewType, userId?: string }) => {
+  const router = useRouter()
+  const clickHandler = () => {
+    router.push("/reedit")
+  }
   return (
     <Card>
       <CardHeader>
@@ -42,6 +50,11 @@ const Review = ({ reviewData }: { reviewData: reviewType }) => {
             )}
           </div>
         )}
+        {userId == reviewData.createdBy && (
+            <Button onClick={clickHandler}>
+                投稿を編集する
+            </Button>
+        )} 
         <Separator />
       </CardHeader>
 			{ (reviewData.tags && reviewData.tags.length !== 0) &&
