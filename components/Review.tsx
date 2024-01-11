@@ -21,7 +21,7 @@ import { useRouter } from 'next/navigation'
 const Review = ({ reviewData, userId }: { reviewData: reviewType, userId?: string }) => {
   const router = useRouter()
   const clickHandler = () => {
-    router.push("/reedit")
+    router.push("/create")
   }
   return (
     <Card>
