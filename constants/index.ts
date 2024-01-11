@@ -4,6 +4,13 @@ type paperInterface = {
   tldr: string;
 };
 
+export type labType ={
+    value: string;
+    users: string[];
+    label: string;
+}
+
+
 export type reviewType = {
   id: string;
   contents: string;
