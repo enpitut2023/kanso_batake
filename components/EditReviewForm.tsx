@@ -56,12 +56,18 @@ const FormSchema = z.object({
 export function ReviewForm({
   userId,
   userName,
+  review,
 }: {
   userId: string;
   userName: string;
+  review: reviewType;
 }) {
+  const tags = review.tags.toString()
+
   const isLoading = useRef(false);// ローディング状態を追跡するためのuseRef
   const [paper, setPaper] = useState<paperDetailsType & paperErrorType>()
+  const [inputContents, setContents] = useState(review.contents)
+  const [inputTags, setTags] = useState(tags)
 
   // useFormフックを使ってフォームを初期化
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -115,6 +121,12 @@ export function ReviewForm({
     console.log(paperData)
     setPaper(paperData)
   }, 300)
+  const onChangeContentsHandler = async(e: { target: { value: React.SetStateAction<string>; }; }) => {
+    setContents(e.target.value)
+  }
+  const onChangeTagsHandler = async(e: { target: { value: React.SetStateAction<string>; }; }) => {
+    setTags(e.target.value)
+  }
 
   // フォームのレンダリングを行う
   return (
@@ -138,6 +150,7 @@ export function ReviewForm({
                         "w-full justify-between",
                         !field.value && "text-muted-foreground"
                       )}
+                      value={review.doi}
                     >
                       {form.getValues("title") ? form.getValues("title") : "Search paper by DOI..."}
                     </Button>
@@ -167,7 +180,8 @@ export function ReviewForm({
                   id="message"
                   rows={10}
                   {...field}
-                  value="てきすと"
+                  value={inputContents}
+                  onChange={onChangeContentsHandler}
                 />
               </FormControl>
               <FormMessage />
@@ -182,7 +196,11 @@ export function ReviewForm({
             <FormItem>
               <FormLabel>タグ(半角カンマ区切りで入力)</FormLabel>
               <FormControl>
-                <Input placeholder="タグを入力してください。" {...field} />
+                <Input placeholder="タグを入力してください。"
+                  {...field}
+                  value={inputTags}
+                  onChange={onChangeTagsHandler}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -1,6 +1,6 @@
 import { fetchReviewsByFilter } from '@/actions/review.action'
 import React from 'react'
-import Review from './ReviewCanEdit'
+import Review from './Review'
 
 const ReviewsByUser = async ({ userId, tag } : { userId: string, tag?:string }) => {
 	const reviewsData = await fetchReviewsByFilter(tag, userId)

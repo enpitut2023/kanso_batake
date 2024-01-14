@@ -9,6 +9,7 @@ import {
   query,
   orderBy,
   where,
+  updateDoc,
 } from "firebase/firestore";
 import db from "@/lib/firebase/store";
 import { reviewType } from "@/constants";
@@ -35,6 +36,16 @@ export async function setReview(userId: string, reviewData: reviewType) {
   ]);
 
   revalidatePath("/create");
+  redirect("/");
+}
+
+export async function updateReview(userId: string, reviewData: reviewType) {
+  await Promise.all([
+    updateDoc(doc(db, `reviews/${reviewData.id}`), reviewData),
+    updateDoc(doc(db, `users/${userId}/reviews/${reviewData.id}`), reviewData),
+  ]);
+
+  revalidatePath(`/reedit/${reviewData.id}`);
   redirect("/");
 }
 
