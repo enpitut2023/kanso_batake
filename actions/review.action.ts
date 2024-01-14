@@ -47,7 +47,7 @@ export async function updateReview(userId: string, reviewData: reviewType) {
   ]);
 
   revalidatePath(`/edit/${reviewData.id}`);
-  redirect("/");
+  redirect(`/user/${userId}`);
 }
 
 export async function deleteReview(reviewData: reviewType,userId?: string) {
@@ -56,8 +56,8 @@ export async function deleteReview(reviewData: reviewType,userId?: string) {
     deleteDoc(doc(db, `users/${userId}/reviews/${reviewData.id}`)),
   ]);
 
-  revalidatePath(`/`);
-  redirect("/");
+  //revalidatePath(`/`);
+  redirect(`/user/${userId}`);
 }
 
 export async function fetchReviewsByUser(userId: string) {
