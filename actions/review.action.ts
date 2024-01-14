@@ -3,12 +3,14 @@
 import {
   collection,
   getDocs,
+  getDoc,
   setDoc,
   doc,
   query,
   orderBy,
   where,
-  getDoc,
+  updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import db from "@/lib/firebase/store";
 import { reviewType } from "@/constants";
@@ -50,6 +52,26 @@ export async function setReview(userId: string, reviewData: reviewType) {
 
   revalidatePath("/create");
   redirect("/");
+}
+
+export async function updateReview(userId: string, reviewData: reviewType) {
+  await Promise.all([
+    updateDoc(doc(db, `reviews/${reviewData.id}`), reviewData),
+    updateDoc(doc(db, `users/${userId}/reviews/${reviewData.id}`), reviewData),
+  ]);
+
+  revalidatePath(`/user/${userId}`);
+  redirect(`/user/${userId}`);
+}
+
+export async function deleteReview(reviewData: reviewType,userId?: string) {
+  await Promise.all([
+    deleteDoc(doc(db, `reviews/${reviewData.id}`)),
+    deleteDoc(doc(db, `users/${userId}/reviews/${reviewData.id}`)),
+  ]);
+
+  revalidatePath(`/user/${userId}`);
+  redirect(`/user/${userId}`);
 }
 
 export async function fetchReviewsByUser(userId: string) {
@@ -150,5 +172,19 @@ export async function fetchReviewsByUserIds(userIds: string[], tag?: string) {
   } catch (error) {
     console.log(error);
     throw new Error("Failed to fetch reviews.");
+  }
+}
+
+export async function fetchReview(id: string) {
+  try {
+    const ReviewData = await getDoc(doc(db, `reviews/${id}`));
+    if (ReviewData.exists()) {
+      return ReviewData.data() as reviewType;
+    } else {
+      throw new Error("Failed to fetch review.");
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error("Failed to fetch review.");
   }
 }
