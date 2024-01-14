@@ -141,7 +141,7 @@ const Review = ({ reviewData, userId }: { reviewData: reviewType, userId?: strin
           {reviewData.reviewerName}
         </Link>
       </CardContent>
-      <CardContent className="break-words whitespace-pre-line markdown">
+      <CardContent className="markdown">
         <ReactMarkDown>{reviewData.contents}</ReactMarkDown>
       </CardContent>
     </Card>
