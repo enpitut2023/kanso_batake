@@ -46,9 +46,11 @@ const Review = ({ reviewData, userId }: { reviewData: reviewType, userId?: strin
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="truncate leading-normal">
-          {reviewData.paperTitle}
-        </CardTitle>
+        <Link href={`/review/${reviewData.id}`}>
+          <CardTitle className="truncate leading-normal hover:">
+            {reviewData.paperTitle}
+          </CardTitle>
+        </Link>
         <CardDescription>{reviewData.authors}</CardDescription>
         <CardDescription>
           {reviewData.journal_name ? reviewData.journal_name + "." : ""}

@@ -30,6 +30,20 @@ export async function getAllReviews() {
   return result;
 }
 
+export async function fetchReview(reviewId: string) {
+  try {
+    const reviewData = await getDoc(doc(db, `reviews/${reviewId}`));
+    if (reviewData.exists()) {
+      return reviewData.data() as reviewType;
+    } else {
+      throw new Error("Failed to fetch review.");
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error("Failed to fetch review.");
+  }
+}
+
 export async function setReview(userId: string, reviewData: reviewType) {
   await Promise.all([
     setDoc(doc(db, `reviews/${reviewData.id}`), reviewData),
