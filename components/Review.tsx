@@ -17,12 +17,18 @@ import { SiDoi } from "react-icons/si";
 import { IoIosPaper } from "react-icons/io";
 import icon from "@/public/icon.png";
 import { useRouter } from 'next/navigation'
+import { deleteReview } from "@/actions/review.action";
 
 const Review = ({ reviewData, userId }: { reviewData: reviewType, userId?: string }) => {
   const router = useRouter()
-  const clickHandler = () => {
+  const editButton_clickHandler = () => {
     router.push(`/edit/${reviewData.id}`)
   }
+
+  const deleteButton_clickHandler = () => {
+    deleteReview(reviewData,userId);
+  }
+  
   return (
     <Card>
       <CardHeader>
@@ -51,10 +57,17 @@ const Review = ({ reviewData, userId }: { reviewData: reviewType, userId?: strin
           </div>
         )}
         {userId == reviewData.createdBy && (
-            <Button onClick={clickHandler}>
+            <Button onClick={editButton_clickHandler}>
                 投稿を編集する
             </Button>
+        )}
+
+        {userId == reviewData.createdBy && (
+            <Button onClick={deleteButton_clickHandler}>
+                投稿を削除する
+            </Button>
         )} 
+
         <Separator />
       </CardHeader>
 			{ (reviewData.tags && reviewData.tags.length !== 0) &&

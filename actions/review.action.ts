@@ -10,6 +10,7 @@ import {
   orderBy,
   where,
   updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import db from "@/lib/firebase/store";
 import { reviewType } from "@/constants";
@@ -46,6 +47,16 @@ export async function updateReview(userId: string, reviewData: reviewType) {
   ]);
 
   revalidatePath(`/edit/${reviewData.id}`);
+  redirect("/");
+}
+
+export async function deleteReview(reviewData: reviewType,userId?: string) {
+  await Promise.all([
+    deleteDoc(doc(db, `reviews/${reviewData.id}`)),
+    deleteDoc(doc(db, `users/${userId}/reviews/${reviewData.id}`)),
+  ]);
+
+  revalidatePath(`/`);
   redirect("/");
 }
 
