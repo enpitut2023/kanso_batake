@@ -19,7 +19,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import AlertDeleteDialog from "@/components/AlertDeleteDialog";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import Image from "next/image";
