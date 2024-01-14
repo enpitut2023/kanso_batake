@@ -3,12 +3,10 @@ import { fetchUser } from "@/actions/user.action";
 import { currentUser } from '@clerk/nextjs';
 import React from "react";
 import Review from "./Review";
-import ReactMarkDown from "react-markdown";
 
 
 const Reviews = async ({ tag } : { tag?: string }) => {
   const reviewsData = await fetchReviewsByFilter(tag)
-
   const _user = await currentUser();
   if (!_user) {
     return (
