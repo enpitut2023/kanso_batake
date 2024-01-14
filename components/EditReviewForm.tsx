@@ -213,7 +213,7 @@ export function ReviewForm({
           </Button>
         ) : (
           <div className="flex flex-row gap-3">
-            <Button type="submit">Submit</Button>
+            <Button type="submit">Save</Button>
             <CalcelCreateReview />
           </div>
         )}
