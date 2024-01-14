@@ -8,6 +8,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import AlertDeleteDialog from "@/components/AlertDeleteDialog";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import Image from "next/image";
@@ -63,9 +75,29 @@ const Review = ({ reviewData, userId }: { reviewData: reviewType, userId?: strin
         )}
 
         {userId == reviewData.createdBy && (
-            <Button onClick={deleteButton_clickHandler}>
-                投稿を削除する
-            </Button>
+            <>
+            <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button>投稿を削除する</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>レビューを削除しますか？</AlertDialogTitle>
+                <AlertDialogDescription>
+                  この操作は元に戻せません。
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>キャンセル</AlertDialogCancel>
+                <AlertDialogAction asChild>
+                <Button onClick={deleteButton_clickHandler}>
+                  投稿を削除する
+                </Button>  
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+          </>
         )} 
 
         <Separator />
