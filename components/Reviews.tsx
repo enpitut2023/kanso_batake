@@ -26,7 +26,6 @@ const Reviews = async ({ tag } : { tag?: string }) => {
       </>
     );
   }
-  const user = await fetchUser(_user.id);
 
   return (
     <>

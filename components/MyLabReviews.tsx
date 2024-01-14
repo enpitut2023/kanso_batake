@@ -13,13 +13,6 @@ const MyLabReviews = async ({ labId, tag }: { labId: string, tag?: string }) => 
     return <div>No Reviews.</div>;
   }
 
-  const _user = await currentUser();
-  if (!_user) {
-    // なにかするべき?
-    return
-  }
-  const user = await fetchUser(_user.id)
-
   return (
     <>
     {
