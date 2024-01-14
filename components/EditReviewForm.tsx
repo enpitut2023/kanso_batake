@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "./ui/textarea";
-import { setReview } from "@/actions/review.action";
+import { setReview, updateReview } from "@/actions/review.action";
 import { paperData, reviewType } from "@/constants";
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
@@ -56,21 +56,27 @@ const FormSchema = z.object({
 export function ReviewForm({
   userId,
   userName,
+  review,
 }: {
   userId: string;
   userName: string;
+  review: reviewType;
 }) {
+  const tags = review.tags.toString()
+
   const isLoading = useRef(false);// ローディング状態を追跡するためのuseRef
   const [paper, setPaper] = useState<paperDetailsType & paperErrorType>()
+  const [inputContents, setContents] = useState(review.contents)
+  const [inputTags, setTags] = useState(tags)
 
   // useFormフックを使ってフォームを初期化
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),// zodResolverを使ってバリデーションを設定
     defaultValues: {
       // フォームフィールドのデフォルト値を設定
-      ReviewContents: "",
-      title: "",
-      Tags: "",
+      ReviewContents: review.contents,
+      title: review.paperTitle,
+      Tags: tags,
     },
   });
 
@@ -85,7 +91,7 @@ export function ReviewForm({
 
     // 提出用のレビューデータを準備
     const reviewData: reviewType = {
-      id: Date.now().toString(),// レビューIDを現在のタイムスタンプで生成
+      id: review.id,
       contents: data.ReviewContents,
       paperTitle: paper.title,
       venue: paper.venue,
@@ -103,7 +109,7 @@ export function ReviewForm({
 
     try {
       // レビューデータの送信を試みる
-      await setReview(userId, reviewData);
+      await updateReview(userId, reviewData);
     } catch (error) {
       console.log(error);
     }
@@ -115,7 +121,15 @@ export function ReviewForm({
     console.log(paperData)
     setPaper(paperData)
   }, 300)
-
+  const onChangeContentsHandler = async(e: { target: { value: string; }; }) => {
+    setContents(e.target.value)
+    form.setValue("ReviewContents", e.target.value)
+  }
+  const onChangeTagsHandler = async(e: { target: { value: string; }; }) => {
+    setTags(e.target.value)
+    form.setValue("Tags", e.target.value)
+  }
+  
   // フォームのレンダリングを行う
   return (
     <Form {...form}>
@@ -167,7 +181,7 @@ export function ReviewForm({
                   id="message"
                   rows={10}
                   {...field}
-                  value="てきすと"
+                  onChange={onChangeContentsHandler}
                 />
               </FormControl>
               <FormMessage />
@@ -182,7 +196,10 @@ export function ReviewForm({
             <FormItem>
               <FormLabel>タグ(半角カンマ区切りで入力)</FormLabel>
               <FormControl>
-                <Input placeholder="タグを入力してください。" {...field} />
+                <Input placeholder="タグを入力してください。"
+                  {...field}
+                  onChange={onChangeTagsHandler}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -196,7 +213,7 @@ export function ReviewForm({
           </Button>
         ) : (
           <div className="flex flex-row gap-3">
-            <Button type="submit">Submit</Button>
+            <Button type="submit">Save</Button>
             <CalcelCreateReview />
           </div>
         )}

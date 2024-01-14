@@ -13,13 +13,6 @@ const MyLabReviews = async ({ labId, tag }: { labId: string, tag?: string }) => 
     return <div>No Reviews.</div>;
   }
 
-  const _user = await currentUser();
-  if (!_user) {
-    // なにかするべき?
-    return
-  }
-  const user = await fetchUser(_user.id)
-
   return (
     <>
     {
@@ -31,7 +24,8 @@ const MyLabReviews = async ({ labId, tag }: { labId: string, tag?: string }) => 
     }
     <div className="flex flex-col gap-2">
     {reviewsData.map((review) => {
-        return <Review key={review.id} reviewData={review} userId={user.id}/>;
+        //return <Review key={review.id} reviewData={review} userId={user.id}/>;
+        return <Review key={review.id} reviewData={review}/>;
     })}
     </div>
     </>
