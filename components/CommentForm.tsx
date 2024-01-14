@@ -16,8 +16,7 @@ import { commentType } from "@/constants";
 import React, { useRef } from "react";
 import { setComment } from "@/actions/comment.action";
 import { Button } from "./ui/button";
-import { Loader2 } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 // フォームのバリデーションスキーマを定義
 const FormSchema = z.object({
