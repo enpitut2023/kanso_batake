@@ -174,17 +174,3 @@ export async function fetchReviewsByUserIds(userIds: string[], tag?: string) {
     throw new Error("Failed to fetch reviews.");
   }
 }
-
-export async function fetchReview(id: string) {
-  try {
-    const ReviewData = await getDoc(doc(db, `reviews/${id}`));
-    if (ReviewData.exists()) {
-      return ReviewData.data() as reviewType;
-    } else {
-      throw new Error("Failed to fetch review.");
-    }
-  } catch (error) {
-    console.log(error);
-    throw new Error("Failed to fetch review.");
-  }
-}
