@@ -18,10 +18,11 @@ import { IoIosPaper } from "react-icons/io";
 import icon from "@/public/icon.png";
 import { useRouter } from 'next/navigation'
 
-const Review = ({ reviewData, userId }: { reviewData: reviewType, userId?: string }) => {
+
+const Review = ({ reviewData, userId}: { reviewData: reviewType, userId:string }) => {
   const router = useRouter()
   const clickHandler = () => {
-    router.push("/create")
+    router.push("/reedit")
   }
   return (
     <Card>
@@ -50,12 +51,12 @@ const Review = ({ reviewData, userId }: { reviewData: reviewType, userId?: strin
             )}
           </div>
         )}
+        <Separator />
         {userId == reviewData.createdBy && (
             <Button onClick={clickHandler}>
                 投稿を編集する
             </Button>
         )} 
-        <Separator />
       </CardHeader>
 			{ (reviewData.tags && reviewData.tags.length !== 0) &&
       <CardContent className="flex gap-2">
