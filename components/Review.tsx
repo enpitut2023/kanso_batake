@@ -18,9 +18,11 @@ const Review = ({ reviewData }: { reviewData: reviewType }) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="truncate leading-normal">
-          {reviewData.paperTitle}
-        </CardTitle>
+        <Link href={`/review/${reviewData.id}`}>
+          <CardTitle className="truncate leading-normal hover:">
+            {reviewData.paperTitle}
+          </CardTitle>
+        </Link>
         <CardDescription>{reviewData.authors}</CardDescription>
         <CardDescription>
           {reviewData.journal_name ? reviewData.journal_name + "." : ""}
