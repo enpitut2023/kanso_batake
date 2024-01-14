@@ -46,7 +46,7 @@ export async function updateReview(userId: string, reviewData: reviewType) {
     updateDoc(doc(db, `users/${userId}/reviews/${reviewData.id}`), reviewData),
   ]);
 
-  revalidatePath(`/edit/${reviewData.id}`);
+  revalidatePath(`/user/${userId}`);
   redirect(`/user/${userId}`);
 }
 
@@ -56,7 +56,7 @@ export async function deleteReview(reviewData: reviewType,userId?: string) {
     deleteDoc(doc(db, `users/${userId}/reviews/${reviewData.id}`)),
   ]);
 
-  //revalidatePath(`/`);
+  revalidatePath(`/user/${userId}`);
   redirect(`/user/${userId}`);
 }
 
