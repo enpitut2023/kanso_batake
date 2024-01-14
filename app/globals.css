@@ -1,7 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
+.markdown h1 {
+    @apply text-3xl;
+}
+.markdown h2 {
+    @apply text-2xl;
+}
+.markdown h3 {
+    @apply text-xl;
+}
+.markdown h4 {
+    @apply text-lg;
+}
+
+  
 @layer base {
   :root {
     --background: 0 0% 100%;
