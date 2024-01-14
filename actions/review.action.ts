@@ -45,7 +45,7 @@ export async function updateReview(userId: string, reviewData: reviewType) {
     updateDoc(doc(db, `users/${userId}/reviews/${reviewData.id}`), reviewData),
   ]);
 
-  revalidatePath(`/reedit/${reviewData.id}`);
+  revalidatePath(`/edit/${reviewData.id}`);
   redirect("/");
 }
 

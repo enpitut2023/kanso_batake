@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "./ui/textarea";
-import { setReview } from "@/actions/review.action";
+import { setReview, updateReview } from "@/actions/review.action";
 import { paperData, reviewType } from "@/constants";
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
@@ -74,9 +74,9 @@ export function ReviewForm({
     resolver: zodResolver(FormSchema),// zodResolverを使ってバリデーションを設定
     defaultValues: {
       // フォームフィールドのデフォルト値を設定
-      ReviewContents: "",
-      title: "",
-      Tags: "",
+      ReviewContents: review.contents,
+      title: review.paperTitle,
+      Tags: tags,
     },
   });
 
@@ -91,7 +91,7 @@ export function ReviewForm({
 
     // 提出用のレビューデータを準備
     const reviewData: reviewType = {
-      id: Date.now().toString(),// レビューIDを現在のタイムスタンプで生成
+      id: review.id,
       contents: data.ReviewContents,
       paperTitle: paper.title,
       venue: paper.venue,
@@ -109,7 +109,7 @@ export function ReviewForm({
 
     try {
       // レビューデータの送信を試みる
-      await setReview(userId, reviewData);
+      await updateReview(userId, reviewData);
     } catch (error) {
       console.log(error);
     }
@@ -121,13 +121,15 @@ export function ReviewForm({
     console.log(paperData)
     setPaper(paperData)
   }, 300)
-  const onChangeContentsHandler = async(e: { target: { value: React.SetStateAction<string>; }; }) => {
+  const onChangeContentsHandler = async(e: { target: { value: string; }; }) => {
     setContents(e.target.value)
+    form.setValue("ReviewContents", e.target.value)
   }
-  const onChangeTagsHandler = async(e: { target: { value: React.SetStateAction<string>; }; }) => {
+  const onChangeTagsHandler = async(e: { target: { value: string; }; }) => {
     setTags(e.target.value)
+    form.setValue("Tags", e.target.value)
   }
-
+  
   // フォームのレンダリングを行う
   return (
     <Form {...form}>
@@ -150,7 +152,6 @@ export function ReviewForm({
                         "w-full justify-between",
                         !field.value && "text-muted-foreground"
                       )}
-                      value={review.doi}
                     >
                       {form.getValues("title") ? form.getValues("title") : "Search paper by DOI..."}
                     </Button>
@@ -180,7 +181,6 @@ export function ReviewForm({
                   id="message"
                   rows={10}
                   {...field}
-                  value={inputContents}
                   onChange={onChangeContentsHandler}
                 />
               </FormControl>
@@ -198,7 +198,6 @@ export function ReviewForm({
               <FormControl>
                 <Input placeholder="タグを入力してください。"
                   {...field}
-                  value={inputTags}
                   onChange={onChangeTagsHandler}
                 />
               </FormControl>

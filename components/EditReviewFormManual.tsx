@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "./ui/textarea";
-import { setReview } from "@/actions/review.action";
+import { setReview, updateReview } from "@/actions/review.action";
 import { reviewType } from "@/constants";
 import { useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
@@ -72,6 +72,7 @@ export function ReviewFormManual({
   userName: string;
   review: reviewType;
 }) {
+    console.log(typeof(review.year))
   const tags = review.tags.toString()
 
   const isLoading = useRef(false);// ローディング状態を追跡するためのuseRef
@@ -92,17 +93,17 @@ export function ReviewFormManual({
     resolver: zodResolver(FormSchema),// zodResolverを使ってバリデーションを設定
     defaultValues: {
       // フォームフィールドのデフォルト値を設定
-      PaperTitle: "",
-      ReviewContents: "",
-      venue: "",
-      year: "",
-      journal_name: "",
-      journal_pages: "",
-      journal_vol: "",
-      authors: "",
-      doi: "",
-      link: "",
-      Tags: "",
+      PaperTitle: review.paperTitle,
+      ReviewContents: review.contents,
+      venue: review.venue,
+      year: review.year,
+      journal_name: review.journal_name,
+      journal_pages: review.journal_pages,
+      journal_vol: review.journal_vol,
+      authors: review.authors,
+      doi: review.doi,
+      link: review.link,
+      Tags: tags,
     },
   });
 
@@ -112,7 +113,7 @@ export function ReviewFormManual({
 
     // 提出用のレビューデータを準備
     const reviewData: reviewType = {
-      id: Date.now().toString(),// レビューIDを現在のタイムスタンプで生成
+      id: review.id,
       contents: data.ReviewContents,
       paperTitle: data.PaperTitle,
       venue: data.venue,
@@ -130,44 +131,55 @@ export function ReviewFormManual({
 
     try {
       // レビューデータの送信を試みる
-      await setReview(userId, reviewData);
+      await updateReview(userId, reviewData);
     } catch (error) {
       console.log(error);
     }
   }
 
-  const onChangeTitleHandler = async(e: { target: { value: React.SetStateAction<string>; }; }) => {
+  const onChangeTitleHandler = async(e: { target: { value: string; }; }) => {
     setTitle(e.target.value)
+    form.setValue("PaperTitle", e.target.value)
   }
-  const onChangeContentsHandler = async(e: { target: { value: React.SetStateAction<string>; }; }) => {
+  const onChangeContentsHandler = async(e: { target: { value: string; }; }) => {
     setContents(e.target.value)
+    form.setValue("ReviewContents", e.target.value)
   }
-  const onChangeVenueHandler = async(e: { target: { value: React.SetStateAction<string>; }; }) => {
+  const onChangeVenueHandler = async(e: { target: { value: string; }; }) => {
     setVenue(e.target.value)
+    form.setValue("venue", e.target.value)
   }
-  const onChangeYearHandler = async(e: { target: { value: React.SetStateAction<string>; }; }) => {
+  const onChangeYearHandler = async(e: { target: { value: string; }; }) => {
     setYear(e.target.value)
+    form.setValue("year", e.target.value)
   }
-  const onChangeJnameHandler = async(e: { target: { value: React.SetStateAction<string>; }; }) => {
+  const onChangeJnameHandler = async(e: { target: { value: string; }; }) => {
     setJournal_name(e.target.value)
+    form.setValue("journal_name", e.target.value)
   }
-  const onChangeJpageHandler = async(e: { target: { value: React.SetStateAction<string>; }; }) => {
+  const onChangeJpageHandler = async(e: { target: { value: string; }; }) => {
     setJournal_pages(e.target.value)
+    form.setValue("journal_pages", e.target.value)
   }
-  const onChangeJvolHandler = async(e: { target: { value: React.SetStateAction<string>; }; }) => {
+  const onChangeJvolHandler = async(e: { target: { value: string; }; }) => {
     setJournal_vol(e.target.value)
+    form.setValue("journal_vol", e.target.value)
   }
-  const onChangeAuthorsHandler = async(e: { target: { value: React.SetStateAction<string>; }; }) => {
+  const onChangeAuthorsHandler = async(e: { target: { value: string; }; }) => {
     setAuthors(e.target.value)
+    form.setValue("authors", e.target.value)
   }
-  const onChangeDoiHandler = async(e: { target: { value: React.SetStateAction<string>; }; }) => {
+  const onChangeDoiHandler = async(e: { target: { value: string; }; }) => {
     setDoi(e.target.value)
+    form.setValue("doi", e.target.value)
   }
-  const onChangeLinkHandler = async(e: { target: { value: React.SetStateAction<string>; }; }) => {
+  const onChangeLinkHandler = async(e: { target: { value: string; }; }) => {
     setLink(e.target.value)
+    form.setValue("link", e.target.value)
   }
-  const onChangeTagsHandler = async(e: { target: { value: React.SetStateAction<string>; }; }) => {
+  const onChangeTagsHandler = async(e: { target: { value: string; }; }) => {
     setTags(e.target.value)
+    form.setValue("Tags", e.target.value)
   }
 
   // フォームのレンダリングを行う
@@ -186,7 +198,7 @@ export function ReviewFormManual({
                 <Input
                   placeholder="論文のタイトルを入力してください。"
                   {...field}
-                  value={inputTitle}
+                //   value={inputTitle}
                   onChange={onChangeTitleHandler}
                 />
               </FormControl>
@@ -205,7 +217,6 @@ export function ReviewFormManual({
               <FormControl>
                 <Input placeholder="著者名を入力してください。"
                 {...field}
-                value={inputAuthors}
                 onChange={onChangeAuthorsHandler}/>
               </FormControl>
               <FormMessage />
@@ -223,7 +234,6 @@ export function ReviewFormManual({
                 <Input
                   placeholder="発表された年を入力してください。"
                   {...field}
-                  value={inputYear}
                   onChange={onChangeYearHandler}
                 />
               </FormControl>
@@ -244,7 +254,6 @@ export function ReviewFormManual({
                   id="message"
                   rows={10}
                   {...field}
-                  value={inputContents}
                   onChange={onChangeContentsHandler}
                 />
               </FormControl>
@@ -262,7 +271,6 @@ export function ReviewFormManual({
               <FormControl>
                 <Input placeholder="会議名を入力してください。"
                   {...field}
-                  value={inputVenue}
                   onChange={onChangeVenueHandler}
                  />
               </FormControl>
@@ -280,7 +288,6 @@ export function ReviewFormManual({
               <FormControl>
                 <Input placeholder="雑誌名を入力してください。"
                   {...field}
-                  value={inputJournal_name}
                   onChange={onChangeJnameHandler}
                  />
               </FormControl>
@@ -299,7 +306,6 @@ export function ReviewFormManual({
                 <Input
                   placeholder="雑誌でのページを入力してください。"
                   {...field}
-                  value={inputJournal_pages}
                   onChange={onChangeJpageHandler}
                 />
               </FormControl>
@@ -318,7 +324,6 @@ export function ReviewFormManual({
                 <Input
                   placeholder="雑誌での巻数を入力してください。"
                   {...field}
-                  value={inputJournal_vol}
                   onChange={onChangeJvolHandler}
                 />
               </FormControl>
@@ -336,7 +341,6 @@ export function ReviewFormManual({
               <FormControl>
                 <Input placeholder="DOIを入力してください。"
                   {...field}
-                  value={inputDoi}
                   onChange={onChangeDoiHandler}
                 />
               </FormControl>
@@ -354,7 +358,6 @@ export function ReviewFormManual({
               <FormControl>
                 <Input placeholder="URLを入力してください。"
                   {...field}
-                  value={inputLink}
                   onChange={onChangeLinkHandler}
                 />
               </FormControl>
@@ -372,7 +375,6 @@ export function ReviewFormManual({
               <FormControl>
                 <Input placeholder="タグを入力してください。"
                   {...field}
-                  value={inputTags}
                   onChange={onChangeTagsHandler}
                 />
               </FormControl>
