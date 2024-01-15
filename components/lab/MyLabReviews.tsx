@@ -1,6 +1,6 @@
 import { fetchReviewsByUserIds } from "@/actions/review.action";
 import React from "react";
-import Review from "./Review";
+import Review from "../Review";
 import { fetchUser, fetchUserIdsByLabId } from "@/actions/user.action";
 import { currentUser } from '@clerk/nextjs';
 

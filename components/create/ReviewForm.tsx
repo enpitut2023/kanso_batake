@@ -23,12 +23,12 @@ import {
 } from "@/components/ui/form";
 import ReactMarkDown from 'react-markdown';
 import { Input } from "@/components/ui/input";
-import { Textarea } from "./ui/textarea";
+import { Textarea } from "../ui/textarea";
 import { setReview } from "@/actions/review.action";
 import { paperData, reviewType } from "@/constants";
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
-import CalcelCreateReview from "./CancelCreateReview";
+import CalcelCreateReview from "../CancelCreateReview";
 import { fetchPaperByDOI, paperDetailsType, paperErrorType } from "@/actions/paper.action";
 import {
   Command,

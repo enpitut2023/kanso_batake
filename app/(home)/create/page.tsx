@@ -1,6 +1,6 @@
 import { fetchUser } from '@/actions/user.action'
-import { ReviewForm } from '@/components/ReviewForm'
-import { ReviewFormManual } from '@/components/ReviewFormManual'
+import { ReviewForm } from '@/components/create/ReviewForm'
+import { ReviewFormManual } from '@/components/create/ReviewFormManual'
 import { SwitchDemo } from '@/components/ReviewFormModeChangeSwitch'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'

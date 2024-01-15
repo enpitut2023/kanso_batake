@@ -1,5 +1,5 @@
-import LabHeader from '@/components/LabHeader'
-import MyLabReviews from '@/components/MyLabReviews'
+import LabHeader from '@/components/lab/LabHeader'
+import MyLabReviews from '@/components/lab/MyLabReviews'
 import { urlDecode } from '@/lib/utils'
 import React from 'react'
 import Search from "@/components/TagSearchBar"
