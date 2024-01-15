@@ -1,5 +1,5 @@
 import React from 'react'
-import LabLists from '@/components/LabLists'
+import LabLists from '@/components/lab/LabLists'
 
 const page = async(
 ) => {

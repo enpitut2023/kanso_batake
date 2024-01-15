@@ -1,6 +1,6 @@
 import { fetchUser } from '@/actions/user.action'
-import { ReviewForm } from '@/components/EditReviewForm'
-import { ReviewFormManual } from '@/components/EditReviewFormManual'
+import { ReviewForm } from '@/components/edit/EditReviewForm'
+import { ReviewFormManual } from '@/components/edit/EditReviewFormManual'
 import { SwitchDemo } from '@/components/ReviewFormModeChangeSwitch'
 import { currentUser } from '@clerk/nextjs'
 import { fetchReview } from '@/actions/review.action'
