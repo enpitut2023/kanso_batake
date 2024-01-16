@@ -62,8 +62,26 @@ export function ReviewForm({
   userName: string;
   review: reviewType;
 }) {
+  const authors: Array<{ name: string; }> = [{ name: review.authors }]
+
   const isLoading = useRef(false);// ローディング状態を追跡するためのuseRef
-  const [paper, setPaper] = useState<paperDetailsType & paperErrorType>()
+  const [paper, setPaper] = useState<paperDetailsType & paperErrorType>({
+    title: review.paperTitle,
+    year: review.year,
+    externalIds: {
+      DOI: review.doi,
+    },
+    url: review.link,
+    journal: {
+      name: review.journal_name,
+      pages: review.journal_pages,
+      volume: review.journal_vol,
+    },
+    authors: authors,
+    venue: review.venue,
+    error: "",
+  }
+  )
 
   // useFormフックを使ってフォームを初期化
   const form = useForm<z.infer<typeof FormSchema>>({
