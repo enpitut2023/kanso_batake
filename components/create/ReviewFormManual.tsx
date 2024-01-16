@@ -26,7 +26,7 @@ import { setReview } from "@/actions/review.action";
 import { reviewType } from "@/constants";
 import { useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
-import CalcelCreateReview from "../CancelCreateReview";
+import CancelCreateReview from "../CancelCreateReview";
 import { delEmpty_tag } from "@/lib/utils";
 import ReactMarkDown from "react-markdown";
 
@@ -351,7 +351,7 @@ export function ReviewFormManual({
         ) : (
           <div className="flex flex-row gap-3">
             <Button type="submit">Submit</Button>
-            <CalcelCreateReview />
+            <CancelCreateReview />
           </div>
         )}
       </form>

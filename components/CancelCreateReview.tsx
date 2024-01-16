@@ -4,7 +4,7 @@ import React from 'react'
 import { Button } from './ui/button'
 import { useRouter } from 'next/navigation'
 
-const CalcelCreateReview = () => {
+const CancelCreateReview = () => {
   const router = useRouter()
 
   const clickHandler = () => {
@@ -18,4 +18,4 @@ const CalcelCreateReview = () => {
   )
 }
 
-export default CalcelCreateReview
+export default CancelCreateReview
