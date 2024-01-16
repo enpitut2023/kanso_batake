@@ -127,7 +127,6 @@ export function ReviewForm({
   const onChageHandler = useDebouncedCallback(async(e) => {
     const paperData = await fetchPaperByDOI(e.target.value)
     form.setValue("title", paperData.title)
-    console.log(paperData)
     setPaper(paperData)
   }, 300)
 

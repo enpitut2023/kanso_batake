@@ -66,8 +66,6 @@ export function ReviewForm({
 
   const isLoading = useRef(false);// ローディング状態を追跡するためのuseRef
   const [paper, setPaper] = useState<paperDetailsType & paperErrorType>()
-  const [inputContents, setContents] = useState(review.contents)
-  const [inputTags, setTags] = useState(tags)
 
   // useFormフックを使ってフォームを初期化
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -118,15 +116,12 @@ export function ReviewForm({
   const onChageHandler = useDebouncedCallback(async(e) => {
     const paperData = await fetchPaperByDOI(e.target.value)
     form.setValue("title", paperData.title)
-    console.log(paperData)
     setPaper(paperData)
   }, 300)
   const onChangeContentsHandler = async(e: { target: { value: string; }; }) => {
-    setContents(e.target.value)
     form.setValue("ReviewContents", e.target.value)
   }
   const onChangeTagsHandler = async(e: { target: { value: string; }; }) => {
-    setTags(e.target.value)
     form.setValue("Tags", e.target.value)
   }
   

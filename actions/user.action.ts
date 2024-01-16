@@ -5,7 +5,6 @@ import db from "@/lib/firebase/store";
 import { arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 
 export async function fetchUser(userId: string) {
-  console.log(userId)
   try {
     const userData = await getDoc(doc(db, `users/${userId}`));
     if (userData.exists()) {

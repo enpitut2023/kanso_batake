@@ -1,7 +1,7 @@
-"use client"
+'use client'
 
 import React from "react";
-import ReactMarkDown from 'react-markdown';
+import ReactMarkDown from "react-markdown";
 import {
   Card,
   CardContent,
@@ -30,19 +30,19 @@ import { IoIosPaper } from "react-icons/io";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { FaRegEdit } from "react-icons/fa";
 import icon from "@/public/icon.png";
-import { useRouter } from 'next/navigation'
 import { deleteReview } from "@/actions/review.action";
 
-const Review = ({ reviewData, userId }: { reviewData: reviewType, userId?: string }) => {
-  const router = useRouter()
-  const editButton_clickHandler = () => {
-    router.push(`/edit/${reviewData.id}`)
-  }
+const Review = ({
+  reviewData,
+  userId,
+}: {
+  reviewData: reviewType;
+  userId?: string;
+}) => {
+  const deleteButton_clickHandler = async () => {
+    await deleteReview(reviewData, userId);
+  };
 
-  const deleteButton_clickHandler = () => {
-    deleteReview(reviewData,userId);
-  }
-  
   return (
     <Card>
       <CardHeader>
@@ -73,61 +73,62 @@ const Review = ({ reviewData, userId }: { reviewData: reviewType, userId?: strin
           </div>
         )}
         <Separator />
-        <div className="flex flex-row gap-2 py-3">
-          {userId == reviewData.createdBy && (
+        {userId == reviewData.createdBy && (
+          <div className="flex flex-row gap-2 py-3">
+            {userId == reviewData.createdBy && (
               <a href={`/edit/${reviewData.id}`} target="_blank">
                 <FaRegEdit size="2rem" />
               </a>
-              // <Button onClick={editButton_clickHandler}>
-              //   投稿を編集する
-              // </Button>
-          )}
+            )}
 
-          {userId == reviewData.createdBy && (
+            {userId == reviewData.createdBy && (
               <>
-              <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <a target="_blank">
-                  <FaRegTrashCan size="2rem" />
-                </a>
-                {/* <Button>投稿を削除する</Button> */}
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>レビューを削除しますか？</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    この操作は元に戻せません。
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>キャンセル</AlertDialogCancel>
-                  <AlertDialogAction asChild>
-                  <Button onClick={deleteButton_clickHandler}>
-                    投稿を削除する
-                  </Button>  
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-            </>
-          )} 
-        </div>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <a target="_blank">
+                      <FaRegTrashCan size="2rem" />
+                    </a>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        レビューを削除しますか？
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        この操作は元に戻せません。
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>キャンセル</AlertDialogCancel>
+                      <AlertDialogAction asChild>
+                        <Button onClick={deleteButton_clickHandler}>
+                          投稿を削除する
+                        </Button>
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </>
+            )}
+          </div>
+        )}
       </CardHeader>
-			{ (reviewData.tags && reviewData.tags.length !== 0) &&
-      <CardContent className="flex gap-2">
-        {reviewData.tags
-          ? reviewData.tags.map((tag) => {
-              return (
-                <Link
-                  href={`?tag=${tag}`}
-                  className="text-blue-400 hover:text-blue-600"
-                >
-                  #{tag}
-                </Link>
-              );
-            })
-          : ""}
-      </CardContent> }
+      {reviewData.tags && reviewData.tags.length !== 0 && (
+        <CardContent className="flex gap-2">
+          {reviewData.tags
+            ? reviewData.tags.map((tag) => {
+                return (
+                  <Link key={tag}
+                    href={`?tag=${tag}`}
+                    className="text-blue-400 hover:text-blue-600"
+                  >
+                    #{tag}
+                  </Link>
+                );
+              })
+            : ""}
+        </CardContent>
+      )}
       <CardContent>
         <Link
           href={`/user/${reviewData.createdBy}`}

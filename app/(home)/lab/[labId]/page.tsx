@@ -3,7 +3,6 @@ import MyLabReviews from '@/components/lab/MyLabReviews'
 import { urlDecode } from '@/lib/utils'
 import React from 'react'
 import Search from "@/components/TagSearchBar"
-import { Suspense } from "react"
 
 const page = async(
   { params: { labId }, searchParams } : { params : { labId: string }, searchParams?: { tag?: string }}
