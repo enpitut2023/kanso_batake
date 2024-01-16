@@ -79,7 +79,7 @@ export function ReviewForm({
   // フォーム送信時の処理を定義
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     if(!paper || (paper && paper.error)){
-      alert("不正なDOIです")
+      alert("DOIが見つかりません\n手動入力に切り替えてください")
       return
     }
 
