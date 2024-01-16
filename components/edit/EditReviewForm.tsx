@@ -4,13 +4,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-  } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -21,14 +14,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import ReactMarkDown from 'react-markdown';
 import { Input } from "@/components/ui/input";
-import { Textarea } from "./ui/textarea";
-import { setReview } from "@/actions/review.action";
+import { Textarea } from "../ui/textarea";
+import { setReview, updateReview } from "@/actions/review.action";
 import { paperData, reviewType } from "@/constants";
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
-import CalcelCreateReview from "./CancelCreateReview";
+import CalcelCreateReview from "../CancelCreateReview";
 import { fetchPaperByDOI, paperDetailsType, paperErrorType } from "@/actions/paper.action";
 import {
   Command,
@@ -64,28 +56,25 @@ const FormSchema = z.object({
 export function ReviewForm({
   userId,
   userName,
+  review,
 }: {
   userId: string;
   userName: string;
+  review: reviewType;
 }) {
+  const tags = review.tags.toString()
+
   const isLoading = useRef(false);// ローディング状態を追跡するためのuseRef
   const [paper, setPaper] = useState<paperDetailsType & paperErrorType>()
-  const [isPreview, setPreview] = useState(false);
-  const bePreview = () => {
-    setPreview(true);
-  }
-  const beEdit = () => {
-    setPreview(false);
-  }
 
   // useFormフックを使ってフォームを初期化
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),// zodResolverを使ってバリデーションを設定
     defaultValues: {
       // フォームフィールドのデフォルト値を設定
-      ReviewContents: "",
-      title: "",
-      Tags: "",
+      ReviewContents: review.contents,
+      title: review.paperTitle,
+      Tags: tags,
     },
   });
 
@@ -100,7 +89,7 @@ export function ReviewForm({
 
     // 提出用のレビューデータを準備
     const reviewData: reviewType = {
-      id: Date.now().toString(),// レビューIDを現在のタイムスタンプで生成
+      id: review.id,
       contents: data.ReviewContents,
       paperTitle: paper.title,
       venue: paper.venue,
@@ -118,7 +107,7 @@ export function ReviewForm({
 
     try {
       // レビューデータの送信を試みる
-      await setReview(userId, reviewData);
+      await updateReview(userId, reviewData);
     } catch (error) {
       console.log(error);
     }
@@ -127,10 +116,15 @@ export function ReviewForm({
   const onChageHandler = useDebouncedCallback(async(e) => {
     const paperData = await fetchPaperByDOI(e.target.value)
     form.setValue("title", paperData.title)
-    console.log(paperData)
     setPaper(paperData)
   }, 300)
-
+  const onChangeContentsHandler = async(e: { target: { value: string; }; }) => {
+    form.setValue("ReviewContents", e.target.value)
+  }
+  const onChangeTagsHandler = async(e: { target: { value: string; }; }) => {
+    form.setValue("Tags", e.target.value)
+  }
+  
   // フォームのレンダリングを行う
   return (
     <Form {...form}>
@@ -170,27 +164,6 @@ export function ReviewForm({
           )}
         />
 
-        <Button
-        type="button"
-        onClick={beEdit}
-        className={`
-            ${!isPreview ? "bg-white border border-gray-300 hover:bg-white  text-gray-800" : "bg-gray-200 text-gray-800 hover:bg-gray-300 focus:border-gray-400 focus:ring focus:ring-gray-200"}
-            px-4 py-2 rounded-none rounded-l-md text-[2px] w-fit
-        `}>
-        Edit
-        </Button>
-        <Button
-        type="button"
-        onClick={bePreview}
-        className={`
-            ${isPreview ? "bg-white border border-gray-300 hover:bg-white text-gray-800" : "bg-gray-200 text-gray-800 hover:bg-gray-300 focus:border-gray-400 focus:ring focus:ring-gray-200"}
-            px-4 py-2 rounded-none rounded-r-md text-[2px] w-fit
-        `}>
-        Preview
-        </Button>
-        
-
-        {!isPreview ? 
         <FormField
           control={form.control}
           name="ReviewContents"
@@ -203,23 +176,13 @@ export function ReviewForm({
                   id="message"
                   rows={10}
                   {...field}
+                  onChange={onChangeContentsHandler}
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        :
-        <>
-        <p className="text-sm font-medium">プレビュー</p>
-        <Card>
-        <CardContent className="markdown">
-            <ReactMarkDown>{form.getValues("ReviewContents")}</ReactMarkDown>
-        </CardContent>
-        </Card>
-        </>
-        }
-        
 
         <FormField
           control={form.control}
@@ -228,7 +191,10 @@ export function ReviewForm({
             <FormItem>
               <FormLabel>タグ(半角カンマ区切りで入力)</FormLabel>
               <FormControl>
-                <Input placeholder="タグを入力してください。" {...field} />
+                <Input placeholder="タグを入力してください。"
+                  {...field}
+                  onChange={onChangeTagsHandler}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -242,7 +208,7 @@ export function ReviewForm({
           </Button>
         ) : (
           <div className="flex flex-row gap-3">
-            <Button type="submit">Submit</Button>
+            <Button type="submit">Save</Button>
             <CalcelCreateReview />
           </div>
         )}

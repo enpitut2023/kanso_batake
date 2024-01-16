@@ -2,8 +2,8 @@ import React from 'react'
 import Review from '@/components/Review';
 import { fetchReview } from '@/actions/review.action';
 import { currentUser } from '@clerk/nextjs';
-import { CommentForm } from '@/components/CommentForm';
-import CommentList from '@/components/CommentList';
+import { CommentForm } from '@/components/review/CommentForm';
+import CommentList from '@/components/review/CommentList';
 
 const page = async(
   { params: { reviewId }} : { params : { reviewId: string } }
