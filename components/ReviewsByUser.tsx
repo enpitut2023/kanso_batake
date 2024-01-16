@@ -16,6 +16,7 @@ const ReviewsByUser = async ({
   if (reviewsData.length == 0) {
     return <div>No Reviews.</div>;
   }
+  const clamp = true
 
   return (
     <>
@@ -26,7 +27,7 @@ const ReviewsByUser = async ({
       )}
       <div className="flex flex-col gap-2">
         {reviewsData.map((review) => {
-          return <Review key={review.id} reviewData={review} userId={user?.id} />;
+          return <Review key={review.id} reviewData={review} userId={user?.id} clamp={clamp}/>;
         })}
       </div>
     </>
