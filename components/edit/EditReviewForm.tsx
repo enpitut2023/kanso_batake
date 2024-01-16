@@ -62,8 +62,6 @@ export function ReviewForm({
   userName: string;
   review: reviewType;
 }) {
-  const tags = review.tags.toString()
-
   const isLoading = useRef(false);// ローディング状態を追跡するためのuseRef
   const [paper, setPaper] = useState<paperDetailsType & paperErrorType>()
 
@@ -72,9 +70,9 @@ export function ReviewForm({
     resolver: zodResolver(FormSchema),// zodResolverを使ってバリデーションを設定
     defaultValues: {
       // フォームフィールドのデフォルト値を設定
-      ReviewContents: review.contents,
-      title: review.paperTitle,
-      Tags: tags,
+      ReviewContents: review.contents ? review.contents : "",
+      title: review.paperTitle ? review.paperTitle : "",
+      Tags: review.tags ? review.tags.toString() : "",
     },
   });
 

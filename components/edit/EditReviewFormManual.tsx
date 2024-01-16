@@ -72,8 +72,6 @@ export function ReviewFormManual({
   userName: string;
   review: reviewType;
 }) {
-  const tags = review.tags.toString()
-
   const isLoading = useRef(false);// ローディング状態を追跡するためのuseRef
 
   // useFormフックを使ってフォームを初期化
@@ -81,17 +79,17 @@ export function ReviewFormManual({
     resolver: zodResolver(FormSchema),// zodResolverを使ってバリデーションを設定
     defaultValues: {
       // フォームフィールドのデフォルト値を設定
-      PaperTitle: review.paperTitle,
-      ReviewContents: review.contents,
-      venue: review.venue,
-      year: review.year,
-      journal_name: review.journal_name,
-      journal_pages: review.journal_pages,
-      journal_vol: review.journal_vol,
-      authors: review.authors,
-      doi: review.doi,
-      link: review.link,
-      Tags: tags,
+      PaperTitle: review.paperTitle ? review.paperTitle : "",
+      ReviewContents: review.contents ? review.contents : "",
+      venue: review.venue ? review.venue : "",
+      year: review.year ? review.year : "",
+      journal_name: review.journal_name ? review.journal_name : "",
+      journal_pages: review.journal_pages ? review.journal_pages : "",
+      journal_vol: review.journal_vol ? review.journal_vol : "",
+      authors: review.authors ? review.authors : "",
+      doi: review.doi ? review.doi : "",
+      link: review.link ? review.link : "",
+      Tags: review.tags ? review.tags.toString() : "",
     },
   });
 
