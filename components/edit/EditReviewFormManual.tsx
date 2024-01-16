@@ -20,7 +20,7 @@ import { setReview, updateReview } from "@/actions/review.action";
 import { reviewType } from "@/constants";
 import { useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
-import CalcelCreateReview from "../CancelCreateReview";
+import CancelEditReview from "../CancelEditReview";
 
 import { delEmpty_tag } from "@/lib/utils";
 
@@ -366,7 +366,7 @@ export function ReviewFormManual({
         ) : (
           <div className="flex flex-row gap-3">
             <Button type="submit">Save</Button>
-            <CalcelCreateReview />
+            <CancelEditReview userId={userId} />
           </div>
         )}
       </form>

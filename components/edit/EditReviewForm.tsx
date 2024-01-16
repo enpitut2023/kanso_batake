@@ -20,7 +20,7 @@ import { setReview, updateReview } from "@/actions/review.action";
 import { paperData, reviewType } from "@/constants";
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
-import CalcelCreateReview from "../CancelCreateReview";
+import CancelEditReview from "../CancelEditReview";
 import { fetchPaperByDOI, paperDetailsType, paperErrorType } from "@/actions/paper.action";
 import {
   Command,
@@ -207,7 +207,7 @@ export function ReviewForm({
         ) : (
           <div className="flex flex-row gap-3">
             <Button type="submit">Save</Button>
-            <CalcelCreateReview />
+            <CancelEditReview  userId={userId}/>
           </div>
         )}
       </form>
