@@ -72,21 +72,9 @@ export function ReviewFormManual({
   userName: string;
   review: reviewType;
 }) {
-    console.log(typeof(review.year))
   const tags = review.tags.toString()
 
   const isLoading = useRef(false);// ローディング状態を追跡するためのuseRef
-  const [inputTitle, setTitle] = useState(review.paperTitle)
-  const [inputContents, setContents] = useState(review.contents)
-  const [inputVenue, setVenue] = useState(review.venue)
-  const [inputYear, setYear] = useState(review.year)
-  const [inputJournal_name, setJournal_name] = useState(review.journal_name)
-  const [inputJournal_pages, setJournal_pages] = useState(review.journal_pages)
-  const [inputJournal_vol, setJournal_vol] = useState(review.journal_vol)
-  const [inputAuthors, setAuthors] = useState(review.authors)
-  const [inputDoi, setDoi] = useState(review.doi)
-  const [inputLink, setLink] = useState(review.link)
-  const [inputTags, setTags] = useState(tags)
 
   // useFormフックを使ってフォームを初期化
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -138,47 +126,36 @@ export function ReviewFormManual({
   }
 
   const onChangeTitleHandler = async(e: { target: { value: string; }; }) => {
-    setTitle(e.target.value)
     form.setValue("PaperTitle", e.target.value)
   }
   const onChangeContentsHandler = async(e: { target: { value: string; }; }) => {
-    setContents(e.target.value)
     form.setValue("ReviewContents", e.target.value)
   }
   const onChangeVenueHandler = async(e: { target: { value: string; }; }) => {
-    setVenue(e.target.value)
     form.setValue("venue", e.target.value)
   }
   const onChangeYearHandler = async(e: { target: { value: string; }; }) => {
-    setYear(e.target.value)
     form.setValue("year", e.target.value)
   }
   const onChangeJnameHandler = async(e: { target: { value: string; }; }) => {
-    setJournal_name(e.target.value)
     form.setValue("journal_name", e.target.value)
   }
   const onChangeJpageHandler = async(e: { target: { value: string; }; }) => {
-    setJournal_pages(e.target.value)
     form.setValue("journal_pages", e.target.value)
   }
   const onChangeJvolHandler = async(e: { target: { value: string; }; }) => {
-    setJournal_vol(e.target.value)
     form.setValue("journal_vol", e.target.value)
   }
   const onChangeAuthorsHandler = async(e: { target: { value: string; }; }) => {
-    setAuthors(e.target.value)
     form.setValue("authors", e.target.value)
   }
   const onChangeDoiHandler = async(e: { target: { value: string; }; }) => {
-    setDoi(e.target.value)
     form.setValue("doi", e.target.value)
   }
   const onChangeLinkHandler = async(e: { target: { value: string; }; }) => {
-    setLink(e.target.value)
     form.setValue("link", e.target.value)
   }
   const onChangeTagsHandler = async(e: { target: { value: string; }; }) => {
-    setTags(e.target.value)
     form.setValue("Tags", e.target.value)
   }
 
