@@ -6,6 +6,7 @@ import { currentUser } from "@clerk/nextjs";
 const Reviews = async ({ tag }: { tag?: string }) => {
   const user = await currentUser();
   const reviewsData = await fetchReviewsByFilter(tag);
+  const clamp = true
 
   return (
     <>
@@ -16,7 +17,7 @@ const Reviews = async ({ tag }: { tag?: string }) => {
       ) : null}
       <div className="flex flex-col gap-2">
         {reviewsData.map((review) => {
-          return <Review key={review.id} reviewData={review} userId={user?.id} />;
+          return <Review key={review.id} reviewData={review} userId={user?.id} clamp={clamp}/>;
         })}
       </div>
     </>
