@@ -1,6 +1,6 @@
 'use client'
 
-import React from "react";
+import React, { useState } from "react";
 import ReactMarkDown from "react-markdown";
 import {
   Card,
@@ -43,6 +43,14 @@ const Review = ({
 }) => {
   const deleteButton_clickHandler = async () => {
     await deleteReview(reviewData, userId);
+  };
+
+  const [isClamp, setIsClamp] = useState<boolean>(true);
+  const onClickClampHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    // ページの上部への移動をキャンセル
+    e.preventDefault();
+    // リンクがクリックされたときに「すべて読む」の表示を切り替え
+    setIsClamp(!isClamp);
   };
 
   return (
@@ -146,19 +154,32 @@ const Review = ({
           {reviewData.reviewerName}
         </Link>
       </CardContent>
-      <CardContent className="markdown">
-        {clamp?
-          <ReactMarkDown className="line-clamp-4">{reviewData.contents}</ReactMarkDown>
-          :<ReactMarkDown>{reviewData.contents}</ReactMarkDown>
-        }
-      </CardContent>
       {clamp
-        ? <CardContent>
-            <Link href={`/review/${reviewData.id}`} className="flex text-blue-400 hover:text-blue-600 underline gap-2">
-              すべて読む
-            </Link>
+        ? isClamp
+          ? <>
+              <CardContent className="markdown">
+                <ReactMarkDown className="line-clamp-4">{reviewData.contents}</ReactMarkDown>
+              </CardContent>
+              <CardContent>
+              <Link href="#" onClick={onClickClampHandler} className="flex text-blue-400 hover:text-blue-600 underline gap-2">
+                すべて読む
+              </Link>
+              </CardContent>
+            </>
+          : <>
+              <CardContent className="markdown">
+                <ReactMarkDown className="">{reviewData.contents}</ReactMarkDown>
+              </CardContent>
+              <CardContent>
+              <Link href="#" onClick={onClickClampHandler} className="flex text-blue-400 hover:text-blue-600 underline gap-2">
+                一部を表示
+              </Link>
+              </CardContent>
+            </>
+        : <CardContent className="markdown">
+            <ReactMarkDown className="">{reviewData.contents}</ReactMarkDown>
           </CardContent>
-        : ""}
+      }
     </Card>
   );
 };
