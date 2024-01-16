@@ -35,9 +35,11 @@ import { deleteReview } from "@/actions/review.action";
 const Review = ({
   reviewData,
   userId,
+  clamp,
 }: {
   reviewData: reviewType;
   userId?: string;
+  clamp: boolean;
 }) => {
   const deleteButton_clickHandler = async () => {
     await deleteReview(reviewData, userId);
@@ -145,8 +147,18 @@ const Review = ({
         </Link>
       </CardContent>
       <CardContent className="markdown">
-        <ReactMarkDown>{reviewData.contents}</ReactMarkDown>
+        {clamp?
+          <ReactMarkDown className="line-clamp-4">{reviewData.contents}</ReactMarkDown>
+          :<ReactMarkDown>{reviewData.contents}</ReactMarkDown>
+        }
       </CardContent>
+      {clamp
+        ? <CardContent>
+            <Link href={`/review/${reviewData.id}`} className="flex text-blue-400 hover:text-blue-600 underline gap-2">
+              すべて読む
+            </Link>
+          </CardContent>
+        : ""}
     </Card>
   );
 };

@@ -10,11 +10,12 @@ const page = async(
 ) => {
   const _user = await currentUser()
   if(!_user) return null
+  const clamp = false
 
   const reviewData = await fetchReview(reviewId)
   return (
     <div className='flex flex-col gap-5'>
-      <Review reviewData={reviewData}/>
+      <Review reviewData={reviewData} clamp={clamp}/>
       <CommentForm userId={_user.id} reviewId={reviewId} />
       <CommentList reviewId={reviewId}/>
     </div>
