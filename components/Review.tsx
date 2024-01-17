@@ -86,7 +86,7 @@ const Review = ({
         {userId == reviewData.createdBy && (
           <div className="flex flex-row gap-2 py-3">
             {userId == reviewData.createdBy && (
-              <a href={`/edit/${reviewData.id}`} target="_blank">
+              <a href={`/edit/${reviewData.id}`} target="">
                 <FaRegEdit size="2rem" />
               </a>
             )}
