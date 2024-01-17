@@ -161,19 +161,24 @@ const Review = ({
                 <ReactMarkDown className="line-clamp-4">{reviewData.contents}</ReactMarkDown>
               </CardContent>
               <CardContent>
-              <Link href="#" onClick={onClickClampHandler} className="flex text-blue-400 hover:text-blue-600 underline gap-2">
+              <a href="#" onClick={onClickClampHandler} className="flex text-blue-400 hover:text-blue-600 underline gap-2">
                 すべて読む
-              </Link>
+              </a>
               </CardContent>
             </>
           : <>
+              <CardContent className="pb-2">
+              <a href="#" onClick={onClickClampHandler} className="flex text-blue-400 hover:text-blue-600 underline gap-2 ">
+                一部を表示
+              </a>
+              </CardContent>
               <CardContent className="markdown">
                 <ReactMarkDown className="">{reviewData.contents}</ReactMarkDown>
               </CardContent>
               <CardContent>
-              <Link href="#" onClick={onClickClampHandler} className="flex text-blue-400 hover:text-blue-600 underline gap-2">
+              <a href="#" onClick={onClickClampHandler} className="flex text-blue-400 hover:text-blue-600 underline gap-2">
                 一部を表示
-              </Link>
+              </a>
               </CardContent>
             </>
         : <CardContent className="markdown">
