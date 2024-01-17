@@ -194,7 +194,7 @@ export function ReviewFormManual({
         onClick={beEdit}
         className={`
             ${!isPreview ? "bg-white border border-gray-300 hover:bg-white  text-gray-800" : "bg-gray-200 text-gray-800 hover:bg-gray-300 focus:border-gray-400 focus:ring focus:ring-gray-200"}
-            px-4 py-2 rounded-none rounded-l-md text-[2px] w-fit
+            px-4 py-2 rounded-none rounded-l-md text-xs w-fit
         `}>
         Edit
         </Button>
@@ -203,7 +203,7 @@ export function ReviewFormManual({
         onClick={bePreview}
         className={`
             ${isPreview ? "bg-white border border-gray-300 hover:bg-white text-gray-800" : "bg-gray-200 text-gray-800 hover:bg-gray-300 focus:border-gray-400 focus:ring focus:ring-gray-200"}
-            px-4 py-2 rounded-none rounded-r-md text-[2px] w-fit
+            px-4 py-2 rounded-none rounded-r-md text-xs w-fit
         `}>
         Preview
         </Button>

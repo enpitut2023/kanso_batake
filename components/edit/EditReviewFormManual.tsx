@@ -14,6 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
 import { setReview, updateReview } from "@/actions/review.action";
@@ -23,6 +24,14 @@ import { Loader2 } from "lucide-react";
 import CancelEditReview from "../CancelEditReview";
 
 import { delEmpty_tag } from "@/lib/utils";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+  } from "@/components/ui/card";
+import ReactMarkDown from 'react-markdown';
 
 // フォームのバリデーションスキーマを定義
 const FormSchema = z.object({
@@ -73,6 +82,13 @@ export function ReviewFormManual({
   review: reviewType;
 }) {
   const isLoading = useRef(false);// ローディング状態を追跡するためのuseRef
+  const [isPreview, setPreview] = useState(false);
+  const bePreview = () => {
+    setPreview(true);
+  }
+  const beEdit = () => {
+    setPreview(false);
+  }
 
   // useFormフックを使ってフォームを初期化
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -217,25 +233,55 @@ export function ReviewFormManual({
           )}
         />
 
+<Button
+        type="button"
+        onClick={beEdit}
+        className={`
+            ${!isPreview ? "bg-white border border-gray-300 hover:bg-white  text-gray-800" : "bg-gray-200 text-gray-800 hover:bg-gray-300 focus:border-gray-400 focus:ring focus:ring-gray-200"}
+            px-4 py-2 rounded-none rounded-l-md text-xs w-fit
+        `}>
+        Edit
+        </Button>
+        <Button
+        type="button"
+        onClick={bePreview}
+        className={`
+            ${isPreview ? "bg-white border border-gray-300 hover:bg-white text-gray-800" : "bg-gray-200 text-gray-800 hover:bg-gray-300 focus:border-gray-400 focus:ring focus:ring-gray-200"}
+            px-4 py-2 rounded-none rounded-r-md text-xs w-fit
+        `}>
+        Preview
+        </Button>
+        
+
+        {!isPreview ? 
         <FormField
-          control={form.control}
-          name="ReviewContents"
-          render={({ field }) => (
+            control={form.control}
+            name="ReviewContents"
+            render={({ field }) => (
             <FormItem>
-              <FormLabel className="flex flex-row gap-1">レビュー<p className="text-red-600">*</p></FormLabel>
-              <FormControl>
+                <FormLabel className="flex flex-row gap-1">レビュー<p className="text-red-600">*</p></FormLabel>
+                <FormControl>
                 <Textarea
-                  placeholder="論文のレビューを入力してください。"
-                  id="message"
-                  rows={10}
-                  {...field}
-                  onChange={onChangeContentsHandler}
+                    placeholder="論文のレビューを入力してください。"
+                    id="message"
+                    rows={10}
+                    {...field}
                 />
-              </FormControl>
-              <FormMessage />
+                </FormControl>
+                <FormMessage />
             </FormItem>
-          )}
+            )}
         />
+        :
+        <>
+        <p className="text-sm font-medium">プレビュー</p>
+        <Card>
+        <CardContent className="markdown">
+            <ReactMarkDown>{form.getValues("ReviewContents")}</ReactMarkDown>
+        </CardContent>
+        </Card>
+        </>
+        }
 
         <FormField
           control={form.control}
