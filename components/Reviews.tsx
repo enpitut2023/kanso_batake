@@ -17,7 +17,7 @@ const Reviews = async ({ tag }: { tag?: string }) => {
       ) : null}
       <div className="flex flex-col gap-2">
         {reviewsData.map((review) => {
-          return <Review key={review.id} reviewData={review} userId={user?.id} clamp={clamp}/>;
+          return <Review key={review.id} reviewData={review} clamp={clamp}/>;
         })}
       </div>
     </>
