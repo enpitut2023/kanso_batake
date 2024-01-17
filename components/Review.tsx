@@ -31,6 +31,7 @@ import { FaRegTrashCan } from "react-icons/fa6";
 import { FaRegEdit } from "react-icons/fa";
 import icon from "@/public/icon.png";
 import { deleteReview } from "@/actions/review.action";
+import { Modal } from "./review/Modal";
 
 const Review = ({
   reviewData,
@@ -143,6 +144,9 @@ const Review = ({
           />
           {reviewData.reviewerName}
         </Link>
+      </CardContent>
+      <CardContent>
+        <Modal imageUrl="/icon.png"/>
       </CardContent>
       <CardContent className="markdown">
         <ReactMarkDown>{reviewData.contents}</ReactMarkDown>
