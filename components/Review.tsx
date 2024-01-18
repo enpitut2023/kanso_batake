@@ -92,7 +92,7 @@ const Review = ({
     <Card>
       <CardHeader>
         <Link href={`/review/${reviewData.id}`}>
-          <CardTitle className="truncate leading-normal hover:">
+          <CardTitle className="truncate leading-normal text-blue-600 hover:text-blue-400 hover:underline">
             {reviewData.paperTitle}
           </CardTitle>
         </Link>
@@ -106,12 +106,12 @@ const Review = ({
         {(reviewData.doi || reviewData.link) && (
           <div className="flex flex-row gap-2 py-3">
             {reviewData.doi && (
-              <a href={`https://www.doi.org/${reviewData.doi}`} target="_blank">
+              <a href={`https://www.doi.org/${reviewData.doi}`} target="_blank" className="transform hover:scale-110 motion-reduce:transform-none">
                 <SiDoi size="2rem" />
               </a>
             )}
             {reviewData.link && (
-              <a href={`${reviewData.link}`} target="_blank">
+              <a href={`${reviewData.link}`} target="_blank" className="transform hover:scale-110 motion-reduce:transform-none">
                 <IoIosPaper size="2rem" />
               </a>
             )}

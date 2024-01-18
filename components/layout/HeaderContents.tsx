@@ -7,6 +7,8 @@ import { AiOutlineHome } from "react-icons/ai";
 import { IoIosCreate } from "react-icons/io";
 import { FaCity } from "react-icons/fa";
 import { ImLab } from "react-icons/im";
+import { RiLogoutBoxRLine } from "react-icons/ri";
+import { RiLoginBoxLine } from "react-icons/ri";
 import { Label } from "@/components/ui/label";
 import {
   Sheet,
@@ -32,7 +34,7 @@ export function HeaderContents({ user }: { user?: userType }) {
     return (
       <Sheet>
         <SheetTrigger asChild className="hover:cursor-pointer">
-          <RxHamburgerMenu size={"2rem"} />
+          <RxHamburgerMenu size={"2rem"} class="transform hover:scale-110"/>
         </SheetTrigger>
         <SheetContent>
           <SheetHeader>
@@ -58,8 +60,8 @@ export function HeaderContents({ user }: { user?: userType }) {
                 </a>
               </div>
             </div>
-            <Link href="/sign-in" className="text-center">
-              サインイン
+            <Link href="/sign-in" className="flex text-lg px-2 py-1 flex-row gap-4 justify-center hover:underline">
+              <RiLoginBoxLine />サインイン
             </Link>
           </div>
         </SheetContent>
@@ -70,7 +72,7 @@ export function HeaderContents({ user }: { user?: userType }) {
   return (
     <Sheet>
       <SheetTrigger asChild className="hover:cursor-pointer">
-        <RxHamburgerMenu size={"2rem"} />
+        <RxHamburgerMenu size={"2rem"} class="transform hover:scale-110"/>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
@@ -142,7 +144,9 @@ export function HeaderContents({ user }: { user?: userType }) {
               </a>
             </div>
           </div>
-          <button onClick={() => signOut()}>サインアウト</button>
+          <button onClick={() => signOut()} className="flex text-lg px-2 py-1 flex-row gap-4 justify-center hover:underline">
+            <RiLogoutBoxRLine /> サインアウト
+          </button>
         </div>
       </SheetContent>
     </Sheet>
