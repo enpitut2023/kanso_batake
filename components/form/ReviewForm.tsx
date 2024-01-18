@@ -4,7 +4,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Card, CardContent } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -15,20 +14,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import ReactMarkDown from "react-markdown";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
-import { setReview } from "@/actions/review.action";
+import { setReview, updateReview } from "@/actions/review.action";
 import { paperData, reviewType } from "@/constants";
-import React, {
-  ChangeEvent,
-  Suspense,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { ChangeEvent, Suspense, useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
-import CalcelCreateReview from "../CancelCreateReview";
+import CancelCreateReview from "./CancelCreateReview";
 import {
   fetchPaperByDOI,
   paperDetailsType,
@@ -50,9 +42,16 @@ import { useDebouncedCallback } from "use-debounce";
 import { cn } from "@/lib/utils";
 
 import { delEmpty_tag } from "@/lib/utils";
-import Image from "next/image";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import ReactMarkDown from "react-markdown";
 import { uploadImage } from "@/actions/image.action";
-import { Label } from "../ui/label";
+import Image from "next/image";
 
 // フォームのバリデーションスキーマを定義
 const FormSchema = z.object({
@@ -65,79 +64,61 @@ const FormSchema = z.object({
   }),
   // Tagsフィールドのバリデーションルール（特に制限なし）
   Tags: z.string(),
-  photoUrl: z.string().url(),
+  photoUrl: z.string(),
 });
 
 // ReviewFormコンポーネントを定義
 export function ReviewForm({
   userId,
   userName,
+  review,
 }: {
   userId: string;
   userName: string;
+  review: reviewType;
 }) {
+  const authors: Array<{ name: string }> = [{ name: review.authors }];
+
   const isLoading = useRef(false); // ローディング状態を追跡するためのuseRef
-  const [paper, setPaper] = useState<paperDetailsType & paperErrorType>();
   const [isPreview, setPreview] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
+
   const bePreview = () => {
     setPreview(true);
   };
+
   const beEdit = () => {
     setPreview(false);
   };
+
+  const [paper, setPaper] = useState<paperDetailsType & paperErrorType>({
+    title: review.paperTitle,
+    year: review.year,
+    externalIds: {
+      DOI: review.doi,
+    },
+    url: review.link,
+    journal: {
+      name: review.journal_name,
+      pages: review.journal_pages,
+      volume: review.journal_vol,
+    },
+    authors: authors,
+    venue: review.venue,
+    error: "",
+  });
 
   // useFormフックを使ってフォームを初期化
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema), // zodResolverを使ってバリデーションを設定
     defaultValues: {
       // フォームフィールドのデフォルト値を設定
-      ReviewContents: "",
-      title: "",
-      Tags: "",
-      photoUrl: "",
+      ReviewContents: review.contents ? review.contents : "",
+      title: review.paperTitle ? review.paperTitle : "",
+      Tags: review.tags ? review.tags.toString() : "",
+      photoUrl: review.imageUrl ? review.imageUrl : ""
     },
   });
-
-  // フォーム送信時の処理を定義
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
-    if (!paper || (paper && paper.error)) {
-      alert("不正なDOIです");
-      return;
-    }
-
-    const id = Date.now().toString(); // レビューIDを現在のタイムスタンプで生成
-
-    const url = files[0] ? await uploadImage(files[0], id) : "";
-
-    isLoading.current = true;
-
-    // 提出用のレビューデータを準備
-    const reviewData: reviewType = {
-      id: id,
-      contents: data.ReviewContents,
-      paperTitle: paper.title,
-      venue: paper.venue,
-      year: paper.year,
-      journal_name: paper.journal.name,
-      journal_pages: paper.journal.pages,
-      journal_vol: paper.journal.volume,
-      authors: paper.authors[0].name,
-      doi: paper.externalIds.DOI,
-      link: paper.url,
-      reviewerName: userName,
-      createdBy: userId,
-      tags: delEmpty_tag(data.Tags),
-      imageUrl: url,
-    };
-
-    try {
-      // レビューデータの送信を試みる
-      await setReview(userId, reviewData);
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   const handleImage = (
     e: ChangeEvent<HTMLInputElement>,
@@ -162,11 +143,61 @@ export function ReviewForm({
     }
   };
 
+  // フォーム送信時の処理を定義
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    if (!paper || (paper && paper.error)) {
+      alert("DOIが見つかりません\n手動入力に切り替えてください");
+      return;
+    }
+
+    isLoading.current = true;
+
+    const id = review.id ? review.id : Date.now().toString(); // レビューIDを現在のタイムスタンプで生成
+
+    const url = files[0] ? await uploadImage(files[0], id) : review.imageUrl;
+
+    // 提出用のレビューデータを準備
+    const reviewData: reviewType = {
+      id: id,
+      contents: data.ReviewContents,
+      paperTitle: paper.title,
+      venue: paper.venue,
+      year: paper.year,
+      journal_name: paper.journal.name,
+      journal_pages: paper.journal.pages,
+      journal_vol: paper.journal.volume,
+      authors: paper.authors[0].name,
+      doi: paper.externalIds.DOI,
+      link: paper.url,
+      reviewerName: userName,
+      createdBy: userId,
+      tags: delEmpty_tag(data.Tags),
+      imageUrl: url
+    };
+
+    try {
+      // レビューデータの送信を試みる
+      if(review.id.length !== 0){
+        await updateReview(userId, reviewData); 
+      }
+      else{
+        await setReview(userId, reviewData)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const onChageHandler = useDebouncedCallback(async (e) => {
+
     const paperData = await fetchPaperByDOI(e.target.value);
     form.setValue("title", paperData.title);
     setPaper(paperData);
   }, 300);
+
+  const onChangeTagsHandler = async (e: { target: { value: string } }) => {
+    form.setValue("Tags", e.target.value);
+  };
 
   // フォームのレンダリングを行う
   return (
@@ -222,7 +253,7 @@ export function ReviewForm({
                 ? "bg-white border border-gray-300 hover:bg-white  text-gray-800"
                 : "bg-gray-200 text-gray-800 hover:bg-gray-300 focus:border-gray-400 focus:ring focus:ring-gray-200"
             }
-            px-4 py-2 rounded-none rounded-l-md text-[2px] w-fit
+            px-4 py-2 rounded-none rounded-l-md text-xs w-fit
         `}
         >
           Edit
@@ -236,7 +267,7 @@ export function ReviewForm({
                 ? "bg-white border border-gray-300 hover:bg-white text-gray-800"
                 : "bg-gray-200 text-gray-800 hover:bg-gray-300 focus:border-gray-400 focus:ring focus:ring-gray-200"
             }
-            px-4 py-2 rounded-none rounded-r-md text-[2px] w-fit
+            px-4 py-2 rounded-none rounded-r-md text-xs w-fit
         `}
         >
           Preview
@@ -283,7 +314,11 @@ export function ReviewForm({
             <FormItem>
               <FormLabel>タグ(半角カンマ区切りで入力)</FormLabel>
               <FormControl>
-                <Input placeholder="タグを入力してください。" {...field} />
+                <Input
+                  placeholder="タグを入力してください。"
+                  {...field}
+                  onChange={onChangeTagsHandler}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -294,18 +329,33 @@ export function ReviewForm({
           control={form.control}
           name="photoUrl"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex flex-row gap-1">
-                Picture
-              </FormLabel>
-              <FormControl>
+            <FormItem className='flex flex-col gap-4 w-1/2'>
+              <FormControl className='flex-1 text-base-semibold text-gray-200'>
                 <Input
-                  type="file"
-                  accept="image/*"
-                  placeholder="Add profile photo"
+                  type='file'
+                  accept='image/*'
+                  placeholder='Add profile photo'
+                  className='account-form_image-input hidden'
                   onChange={(e) => handleImage(e, field.onChange)}
                 />
               </FormControl>
+              <FormLabel>画像</FormLabel>
+              <FormLabel className='account-form_image-label'>
+                {field.value ? (
+                  <Image
+                    src={field.value}
+                    alt='reviewImage'
+                    width={1920}
+                    height={1080}
+                    priority
+                    className='object-contain max-h-[30vh]'
+                  />
+                ) : (
+                  <div className="flex justify-center items-center h-[30vh] border-dashed border-2 text-gray-600">
+                    左クリックで画像を選択
+                  </div>
+                )}
+              </FormLabel>
             </FormItem>
           )}
         />
@@ -317,8 +367,8 @@ export function ReviewForm({
           </Button>
         ) : (
           <div className="flex flex-row gap-3">
-            <Button type="submit">Submit</Button>
-            <CalcelCreateReview />
+            <Button type="submit">Save</Button>
+            <CancelCreateReview />
           </div>
         )}
       </form>

@@ -1,6 +1,6 @@
 'use client'
 
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactMarkDown from "react-markdown";
 import {
   Card,
@@ -36,13 +36,58 @@ import { Modal } from "./review/Modal";
 const Review = ({
   reviewData,
   userId,
+  clamp,
 }: {
   reviewData: reviewType;
   userId?: string;
+  clamp?: boolean;
 }) => {
   const deleteButton_clickHandler = async () => {
     await deleteReview(reviewData, userId);
   };
+
+  const [nowClamp, setNowClamp] = useState<boolean>(true);
+  const onClickClampHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    // ページの上部への移動をキャンセル
+    e.preventDefault();
+    // リンクがクリックされたときに「すべて読む」の表示を切り替え
+    setNowClamp(!nowClamp);
+  };
+
+  // 描画されているレビューの行数をカウントする
+  const [lineCount, setLineCount] = useState<number>(1);
+  const textRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const div = textRef.current
+    if (!div) return 
+    const calculateTextInfo = () => {
+      if (textRef.current) {
+        const textElement = textRef.current;
+        const containerHeight = textElement.clientHeight;
+        const lineHeight = parseFloat(getComputedStyle(textElement).lineHeight);
+        const calculatedLineCount = Math.floor(containerHeight / lineHeight);
+        setLineCount(calculatedLineCount);
+      }
+    };
+    window.addEventListener('resize', calculateTextInfo);
+    calculateTextInfo(); // 初回表示時にも計算
+    return () => {
+      window.removeEventListener('resize', calculateTextInfo);
+    };
+  }, []);
+  // 「すべて読む」「一部を表示」表示なしの分岐
+  // 1:「すべて読む」, 2:「一部を表示」, 0:表示なし(clampなし)
+  const getReadAllFlag = (
+    {clamp, nowClamp, lineCount}: {clamp?: boolean, lineCount: number, nowClamp: boolean}) => {
+    if (clamp && lineCount >= 5 && nowClamp){
+      return 1
+    }else if (clamp && lineCount >= 5 && !nowClamp) {
+      return 2
+    } else {
+      return 0
+    }
+  }
+  const readAllFlag = getReadAllFlag({clamp, nowClamp, lineCount})
 
   return (
     <Card>
@@ -77,7 +122,7 @@ const Review = ({
         {userId == reviewData.createdBy && (
           <div className="flex flex-row gap-2 py-3">
             {userId == reviewData.createdBy && (
-              <a href={`/edit/${reviewData.id}`} target="_blank">
+              <a href={`/edit/${reviewData.id}`} target="">
                 <FaRegEdit size="2rem" />
               </a>
             )}
@@ -145,12 +190,35 @@ const Review = ({
           {reviewData.reviewerName}
         </Link>
       </CardContent>
-      <CardContent>
-        <Modal imageUrl="/icon.png"/>
-      </CardContent>
-      <CardContent className="markdown">
-        <ReactMarkDown>{reviewData.contents}</ReactMarkDown>
-      </CardContent>
+        {reviewData.imageUrl && (
+          <CardContent>
+            <Modal imageUrl={reviewData.imageUrl}/>
+          </CardContent>
+        )}
+      {readAllFlag==1
+        ? <><CardContent className="markdown">
+              <ReactMarkDown className="line-clamp-4">{reviewData.contents}</ReactMarkDown>
+            </CardContent>
+            <CardContent>
+              <a href="#" onClick={onClickClampHandler}
+                className="flex text-blue-400 hover:text-blue-600 underline gap-2">
+                すべて読む
+              </a>
+            </CardContent>
+          </>
+        : readAllFlag==2
+          ? <><CardContent className="markdown">
+                <ReactMarkDown className="">{reviewData.contents}</ReactMarkDown>
+              </CardContent><CardContent>
+                  <a href="#" onClick={onClickClampHandler} className="flex text-blue-400 hover:text-blue-600 underline gap-2">
+                    一部を表示
+                  </a>
+                </CardContent>
+            </>
+          : <CardContent ref={textRef} className="markdown">
+              <ReactMarkDown className="">{reviewData.contents}</ReactMarkDown>
+            </CardContent>
+      }
     </Card>
   );
 };
