@@ -150,23 +150,12 @@ const Review = ({
           {reviewData.reviewerName}
         </Link>
       </CardContent>
-      {!isExtended ?
       <CardContent className="markdown">
-        <ReactMarkDown className="line-clamp-4">{reviewData.contents}</ReactMarkDown>
-        {reviewData.contents.split('\n').length > 4 && (
+        <ReactMarkDown className={`line-clamp-${isExtended ? 'none' : '4'}`}>{reviewData.contents}</ReactMarkDown>
         <button onClick={toggleExtended}>
-          <p className="text-blue-400">すべて読む</p>
-        </button>
-        )}
-      </CardContent>
-      :
-      <CardContent className="markdown">
-        <ReactMarkDown>{reviewData.contents}</ReactMarkDown>
-        <button onClick={toggleExtended}>
-          <p className="text-blue-400">一部を表示</p>
+          <p className="text-blue-400 hover:text-blue-600 underline">{isExtended ? "一部を表示":"すべて読む"}</p>
         </button>
       </CardContent>
-      }
     </Card>
   );
 };
