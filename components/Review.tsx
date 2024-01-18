@@ -39,7 +39,7 @@ const Review = ({
 }: {
   reviewData: reviewType;
   userId?: string;
-  clamp: boolean;
+  clamp?: boolean;
 }) => {
   const deleteButton_clickHandler = async () => {
     await deleteReview(reviewData, userId);
@@ -77,7 +77,7 @@ const Review = ({
   // 「すべて読む」「一部を表示」表示なしの分岐
   // 1:「すべて読む」, 2:「一部を表示」, 0:表示なし(clampなし)
   const getReadAllFlag = (
-    {clamp, nowClamp, lineCount}: {clamp: boolean, lineCount: number, nowClamp: boolean}) => {
+    {clamp, nowClamp, lineCount}: {clamp?: boolean, lineCount: number, nowClamp: boolean}) => {
     if (clamp && lineCount >= 5 && nowClamp){
       return 1
     }else if (clamp && lineCount >= 5 && !nowClamp) {

@@ -5,6 +5,7 @@ import { HiOutlineExternalLink } from "react-icons/hi";
 import { IoPersonOutline } from "react-icons/io5";
 import { AiOutlineHome } from "react-icons/ai";
 import { IoIosCreate } from "react-icons/io";
+import { FaCity } from "react-icons/fa";
 import { ImLab } from "react-icons/im";
 import { Label } from "@/components/ui/label";
 import {
@@ -117,6 +118,14 @@ export function HeaderContents({ user }: { user?: userType }) {
                   className="flex text-lg px-2 py-1 flex-row items-center gap-4 hover:underline"
                 >
                   <ImLab /> マイラボ
+                </Link>
+              </SheetClose>
+              <SheetClose asChild>
+                <Link
+                  href={`/lab`}
+                  className="flex text-lg px-2 py-1 flex-row items-center gap-4 hover:underline"
+                >
+                  <FaCity /> 研究室一覧
                 </Link>
               </SheetClose>
             </div>

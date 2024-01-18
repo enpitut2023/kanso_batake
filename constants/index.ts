@@ -1,3 +1,5 @@
+import { paperDetailsType } from "@/actions/paper.action";
+
 type paperInterface = {
   id: string;
   title: string;
@@ -51,6 +53,23 @@ export type userType = {
   // いったん　Student or Teacher
   works: string[];
 };
+
+export const emptyReview: reviewType = {
+  id: "",
+  contents: "",
+  paperTitle: "",
+  reviewerName: "",
+  createdBy: "",
+  venue: "",
+  year: "",
+  journal_name: "",
+  journal_pages: "",
+  journal_vol: "",
+  authors: "",
+  doi: "",
+  link: "",
+  tags: []
+}
 
 export const role = [
     "学生",
