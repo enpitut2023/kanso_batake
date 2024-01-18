@@ -28,6 +28,7 @@ export type reviewType = {
   doi: string;
   link: string;
   tags: string[];
+  imageUrl: string;
 };
 
 export type commentType = {

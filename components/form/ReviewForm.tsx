@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
 import { setReview, updateReview } from "@/actions/review.action";
 import { paperData, reviewType } from "@/constants";
-import React, { Suspense, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, Suspense, useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 import CancelCreateReview from "./CancelCreateReview";
 import {
@@ -50,6 +50,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import ReactMarkDown from "react-markdown";
+import { uploadImage } from "@/actions/image.action";
+import Image from "next/image";
+import { useToast } from "../ui/use-toast";
+import { Toaster } from "../ui/toaster";
+import { usePathname } from "next/navigation";
 
 // フォームのバリデーションスキーマを定義
 const FormSchema = z.object({
@@ -62,6 +67,7 @@ const FormSchema = z.object({
   }),
   // Tagsフィールドのバリデーションルール（特に制限なし）
   Tags: z.string(),
+  photoUrl: z.string(),
 });
 
 // ReviewFormコンポーネントを定義
@@ -78,6 +84,9 @@ export function ReviewForm({
 
   const isLoading = useRef(false); // ローディング状態を追跡するためのuseRef
   const [isPreview, setPreview] = useState(false);
+  const [files, setFiles] = useState<File[]>([]);
+  const { toast }= useToast()
+  const pathname = usePathname()
 
   const bePreview = () => {
     setPreview(true);
@@ -112,8 +121,32 @@ export function ReviewForm({
       ReviewContents: review.contents ? review.contents : "",
       title: review.paperTitle ? review.paperTitle : "",
       Tags: review.tags ? review.tags.toString() : "",
+      photoUrl: review.imageUrl ? review.imageUrl : ""
     },
   });
+
+  const handleImage = (
+    e: ChangeEvent<HTMLInputElement>,
+    fieldChange: (value: string) => void
+  ) => {
+    e.preventDefault();
+
+    const fileReader = new FileReader();
+
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setFiles(Array.from(e.target.files));
+
+      if (!file.type.includes("image")) return;
+
+      fileReader.onload = async (event) => {
+        const imageDataUrl = event.target?.result?.toString() || "";
+        fieldChange(imageDataUrl);
+      };
+
+      fileReader.readAsDataURL(file);
+    }
+  };
 
   // フォーム送信時の処理を定義
   async function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -124,9 +157,13 @@ export function ReviewForm({
 
     isLoading.current = true;
 
+    const id = review.id ? review.id : Date.now().toString(); // レビューIDを現在のタイムスタンプで生成
+
+    const url = files[0] ? await uploadImage(files[0], id) : review.imageUrl;
+
     // 提出用のレビューデータを準備
     const reviewData: reviewType = {
-      id: review.id,
+      id: id,
       contents: data.ReviewContents,
       paperTitle: paper.title,
       venue: paper.venue,
@@ -140,21 +177,33 @@ export function ReviewForm({
       reviewerName: userName,
       createdBy: userId,
       tags: delEmpty_tag(data.Tags),
+      imageUrl: url
     };
 
     try {
       // レビューデータの送信を試みる
-      await updateReview(userId, reviewData);
+      if(pathname === "/create"){
+        await setReview(userId, reviewData)
+      }
+      else{
+        await updateReview(userId, reviewData); 
+      }
     } catch (error) {
       console.log(error);
     }
   }
 
   const onChageHandler = useDebouncedCallback(async (e) => {
+    toast({ title: "論文情報を検索中" })
     const paperData = await fetchPaperByDOI(e.target.value);
+    if (paperData.title) {
+      toast({ title: "論文情報を取得しました" })
+    } else {
+      toast({ title: "論文情報取得に失敗しました", description: "DOIを再入力するか、手動で論文情報を入力してください。", variant: "destructive" })
+    }
     form.setValue("title", paperData.title);
     setPaper(paperData);
-  }, 300);
+  }, 1000);
 
   const onChangeTagsHandler = async (e: { target: { value: string } }) => {
     form.setValue("Tags", e.target.value);
@@ -163,6 +212,7 @@ export function ReviewForm({
   // フォームのレンダリングを行う
   return (
     <Form {...form}>
+      <Toaster />
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
         <FormField
           control={form.control}
@@ -282,6 +332,41 @@ export function ReviewForm({
                 />
               </FormControl>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="photoUrl"
+          render={({ field }) => (
+            <FormItem className='flex flex-col gap-4 w-1/2'>
+              <FormControl className='flex-1 text-base-semibold text-gray-200'>
+                <Input
+                  type='file'
+                  accept='image/*'
+                  placeholder='Add profile photo'
+                  className='account-form_image-input hidden'
+                  onChange={(e) => handleImage(e, field.onChange)}
+                />
+              </FormControl>
+              <FormLabel>画像</FormLabel>
+              <FormLabel className='account-form_image-label'>
+                {field.value ? (
+                  <Image
+                    src={field.value}
+                    alt='reviewImage'
+                    width={1920}
+                    height={1080}
+                    priority
+                    className='object-contain max-h-[30vh]'
+                  />
+                ) : (
+                  <div className="flex justify-center items-center h-[30vh] border-dashed border-2 text-gray-600">
+                    左クリックで画像を選択
+                  </div>
+                )}
+              </FormLabel>
             </FormItem>
           )}
         />
