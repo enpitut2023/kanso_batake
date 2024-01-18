@@ -34,6 +34,7 @@ import {
 import ReactMarkDown from "react-markdown";
 import Image from "next/image";
 import { uploadImage } from "@/actions/image.action";
+import { usePathname } from "next/navigation";
 
 // フォームのバリデーションスキーマを定義
 const FormSchema = z.object({
@@ -86,6 +87,8 @@ export function ReviewFormManual({
   const isLoading = useRef(false); // ローディング状態を追跡するためのuseRef
   const [isPreview, setPreview] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
+  const pathname = usePathname()
+
   const bePreview = () => {
     setPreview(true);
   };
@@ -101,7 +104,7 @@ export function ReviewFormManual({
       PaperTitle: review.paperTitle ? review.paperTitle : "",
       ReviewContents: review.contents ? review.contents : "",
       venue: review.venue ? review.venue : "",
-      year: review.year ? review.year : "",
+      year: review.year ? review.year.toString() : "",
       journal_name: review.journal_name ? review.journal_name : "",
       journal_pages: review.journal_pages ? review.journal_pages : "",
       journal_vol: review.journal_vol ? review.journal_vol : "",
@@ -142,7 +145,12 @@ export function ReviewFormManual({
 
     try {
       // レビューデータの送信を試みる
-      await updateReview(userId, reviewData);
+      if(pathname === "/create"){
+        await setReview(userId, reviewData)
+      }
+      else{
+        await updateReview(userId, reviewData); 
+      }
     } catch (error) {
       console.log(error);
     }

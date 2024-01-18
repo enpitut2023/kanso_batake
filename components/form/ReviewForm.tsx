@@ -52,6 +52,9 @@ import {
 import ReactMarkDown from "react-markdown";
 import { uploadImage } from "@/actions/image.action";
 import Image from "next/image";
+import { useToast } from "../ui/use-toast";
+import { Toaster } from "../ui/toaster";
+import { usePathname } from "next/navigation";
 
 // フォームのバリデーションスキーマを定義
 const FormSchema = z.object({
@@ -82,6 +85,8 @@ export function ReviewForm({
   const isLoading = useRef(false); // ローディング状態を追跡するためのuseRef
   const [isPreview, setPreview] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
+  const { toast }= useToast()
+  const pathname = usePathname()
 
   const bePreview = () => {
     setPreview(true);
@@ -177,11 +182,11 @@ export function ReviewForm({
 
     try {
       // レビューデータの送信を試みる
-      if(review.id.length !== 0){
-        await updateReview(userId, reviewData); 
+      if(pathname === "/create"){
+        await setReview(userId, reviewData)
       }
       else{
-        await setReview(userId, reviewData)
+        await updateReview(userId, reviewData); 
       }
     } catch (error) {
       console.log(error);
@@ -189,11 +194,16 @@ export function ReviewForm({
   }
 
   const onChageHandler = useDebouncedCallback(async (e) => {
-
+    toast({ title: "論文情報を検索中" })
     const paperData = await fetchPaperByDOI(e.target.value);
+    if (paperData.title) {
+      toast({ title: "論文情報を取得しました" })
+    } else {
+      toast({ title: "論文情報取得に失敗しました", description: "DOIを再入力するか、手動で論文情報を入力してください。", variant: "destructive" })
+    }
     form.setValue("title", paperData.title);
     setPaper(paperData);
-  }, 300);
+  }, 1000);
 
   const onChangeTagsHandler = async (e: { target: { value: string } }) => {
     form.setValue("Tags", e.target.value);
@@ -202,6 +212,7 @@ export function ReviewForm({
   // フォームのレンダリングを行う
   return (
     <Form {...form}>
+      <Toaster />
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
         <FormField
           control={form.control}
