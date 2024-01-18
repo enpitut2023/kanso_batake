@@ -18,7 +18,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
 import { setReview, updateReview } from "@/actions/review.action";
 import { paperData, reviewType } from "@/constants";
-import React, { ChangeEvent, Suspense, useEffect, useRef, useState } from "react";
+import React, {
+  ChangeEvent,
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Loader2 } from "lucide-react";
 import CancelCreateReview from "./CancelCreateReview";
 import {
@@ -87,8 +93,8 @@ export function ReviewForm({
   const isLoading = useRef(false); // ローディング状態を追跡するためのuseRef
   const [isPreview, setPreview] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
-  const { toast }= useToast()
-  const pathname = usePathname()
+  const { toast } = useToast();
+  const pathname = usePathname();
 
   const bePreview = () => {
     setPreview(true);
@@ -123,7 +129,7 @@ export function ReviewForm({
       ReviewContents: review.contents ? review.contents : "",
       title: review.paperTitle ? review.paperTitle : "",
       Tags: review.tags ? review.tags.toString() : "",
-      photoUrl: review.imageUrl ? review.imageUrl : ""
+      photoUrl: review.imageUrl ? review.imageUrl : "",
     },
   });
 
@@ -179,16 +185,15 @@ export function ReviewForm({
       reviewerName: userName,
       createdBy: userId,
       tags: delEmpty_tag(data.Tags),
-      imageUrl: url
+      imageUrl: url,
     };
 
     try {
       // レビューデータの送信を試みる
-      if(pathname === "/create"){
-        await setReview(userId, reviewData)
-      }
-      else{
-        await updateReview(userId, reviewData); 
+      if (pathname === "/create") {
+        await setReview(userId, reviewData);
+      } else {
+        await updateReview(userId, reviewData);
       }
     } catch (error) {
       console.log(error);
@@ -196,12 +201,16 @@ export function ReviewForm({
   }
 
   const onChageHandler = useDebouncedCallback(async (e) => {
-    toast({ title: "論文情報を検索中" })
+    toast({ title: "論文情報を検索中" });
     const paperData = await fetchPaperByDOI(e.target.value);
     if (paperData.title) {
-      toast({ title: "論文情報を取得しました" })
+      toast({ title: "論文情報を取得しました" });
     } else {
-      toast({ title: "論文情報取得に失敗しました", description: "DOIを再入力するか、手動で論文情報を入力してください。", variant: "destructive" })
+      toast({
+        title: "論文情報取得に失敗しました",
+        description: "DOIを再入力するか、手動で論文情報を入力してください。",
+        variant: "destructive",
+      });
     }
     form.setValue("title", paperData.title);
     setPaper(paperData);
@@ -215,9 +224,9 @@ export function ReviewForm({
   return (
     <Form {...form}>
       <Toaster />
-      
+
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
-      <Button
+        <Button
           type="button"
           onClick={beEdit}
           className={`
@@ -247,195 +256,182 @@ export function ReviewForm({
         </Button>
         {!isPreview ? (
           <>
-          <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex flex-row gap-1">
-                タイトル<p className="text-red-600">*</p>
-              </FormLabel>
-              <FormControl>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        className={cn(
-                          "w-full justify-between",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {form.getValues("title")
-                          ? form.getValues("title")
-                          : "Search paper by DOI..."}
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[50vw] p-0">
-                    <Command>
-                      <CommandInput
-                        placeholder="Search paper by DOI..."
-                        onChangeCapture={onChageHandler}
-                      />
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-            control={form.control}
-            name="ReviewContents"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex flex-row gap-1">
-                  レビュー<p className="text-red-600">*</p>
-                </FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="論文のレビューを入力してください。"
-                    id="message"
-                    rows={10}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-          control={form.control}
-          name="Tags"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>タグ(半角カンマ区切りで入力)</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="タグを入力してください。"
-                  {...field}
-                  onChange={onChangeTagsHandler}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="photoUrl"
-          render={({ field }) => (
-            <FormItem className='flex flex-col gap-4 w-1/2'>
-              <FormControl className='flex-1 text-base-semibold text-gray-200'>
-                <Input
-                  type='file'
-                  accept='image/*'
-                  placeholder='Add profile photo'
-                  className='account-form_image-input hidden'
-                  onChange={(e) => handleImage(e, field.onChange)}
-                />
-              </FormControl>
-              <FormLabel>画像</FormLabel>
-              <FormLabel className='account-form_image-label'>
-                {field.value ? (
-                  <Image
-                    src={field.value}
-                    alt='reviewImage'
-                    width={1920}
-                    height={1080}
-                    priority
-                    className='object-contain max-h-[30vh]'
-                  />
-                ) : (
-                  <div className="flex justify-center items-center h-[30vh] border-dashed border-2 text-gray-600">
-                    左クリックで画像を選択
-                  </div>
-                )}
-              </FormLabel>
-            </FormItem>
-          )}
-        /></>
-        ) : (
-            <Card>
-        <CardHeader>
-            <CardTitle className="truncate leading-normal text-blue-600 hover:text-blue-400 hover:underline">
-                {form.getValues("title")}
-            </CardTitle>
-            <CardDescription>{paper.authors[0].name}</CardDescription>
-            <CardDescription>
-            {paper.journal.name? paper.journal.name + "." : ""}
-            {paper.year ? paper.year + "." : ""}
-            {paper.journal.volume ? paper.journal.volume + "." : ""}
-            {paper.journal.pages ? paper.journal.pages + "." : ""}
-            </CardDescription>
-            {(paper.externalIds.DOI || paper.url) && (
-            <div className="flex flex-row gap-2 py-3">
-                {paper.externalIds.DOI && (
-                <SiDoi size="2rem" />
-                )}
-                {paper.url && (
-                    <IoIosPaper size="2rem" />
-                )}
-            </div>
-            )}
-            <Separator />
-        </CardHeader>
-        {form.getValues("Tags") && form.getValues("Tags").length !== 0 && (
-            <CardContent className="flex gap-2">
-            {form.getValues("Tags")
-                ? form.getValues("Tags").map((tag) => {
-                    return (
-                    <p key={tag}
-                        className="text-blue-400 hover:text-blue-600"
-                    >
-                        #{tag}
-                    </p>
-                    );
-                })
-                : ""}
-            </CardContent>
-        )}
-        <CardContent>
-            <p
-            className="flex text-blue-400 hover:text-blue-600 underline gap-2"
-            >
-            <Image
-                src={icon}
-                alt="Icon Image"
-                className="rounded"
-                width={24}
-                height={24}
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex flex-row gap-1">
+                    タイトル<p className="text-red-600">*</p>
+                  </FormLabel>
+                  <FormControl>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className={cn(
+                              "w-full justify-between",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {form.getValues("title")
+                              ? form.getValues("title")
+                              : "Search paper by DOI..."}
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[50vw] p-0">
+                        <Command>
+                          <CommandInput
+                            placeholder="Search paper by DOI..."
+                            onChangeCapture={onChageHandler}
+                          />
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {reviewData.reviewerName}
-            </p>
-        </CardContent>
-            {reviewData.imageUrl && (
+            <FormField
+              control={form.control}
+              name="ReviewContents"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex flex-row gap-1">
+                    レビュー<p className="text-red-600">*</p>
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="論文のレビューを入力してください。"
+                      id="message"
+                      rows={10}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="Tags"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>タグ(半角カンマ区切りで入力)</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="タグを入力してください。"
+                      {...field}
+                      onChange={onChangeTagsHandler}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="photoUrl"
+              render={({ field }) => (
+                <FormItem className="flex flex-col gap-4 w-1/2">
+                  <FormControl className="flex-1 text-base-semibold text-gray-200">
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      placeholder="Add profile photo"
+                      className="account-form_image-input hidden"
+                      onChange={(e) => handleImage(e, field.onChange)}
+                    />
+                  </FormControl>
+                  <FormLabel>画像</FormLabel>
+                  <FormLabel className="account-form_image-label">
+                    {field.value ? (
+                      <Image
+                        src={field.value}
+                        alt="reviewImage"
+                        width={1920}
+                        height={1080}
+                        priority
+                        className="object-contain max-h-[30vh]"
+                      />
+                    ) : (
+                      <div className="flex justify-center items-center h-[30vh] border-dashed border-2 text-gray-600">
+                        左クリックで画像を選択
+                      </div>
+                    )}
+                  </FormLabel>
+                </FormItem>
+              )}
+            />
+          </>
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle className="truncate leading-normal text-blue-600 hover:text-blue-400 hover:underline">
+                {form.getValues("title")}
+              </CardTitle>
+              <CardDescription>{paper.authors[0].name}</CardDescription>
+              <CardDescription>
+                {paper.journal.name ? paper.journal.name + "." : ""}
+                {paper.year ? paper.year + "." : ""}
+                {paper.journal.volume ? paper.journal.volume + "." : ""}
+                {paper.journal.pages ? paper.journal.pages + "." : ""}
+              </CardDescription>
+              {(paper.externalIds.DOI || paper.url) && (
+                <div className="flex flex-row gap-2 py-3">
+                  {paper.externalIds.DOI && <SiDoi size="2rem" />}
+                  {paper.url && <IoIosPaper size="2rem" />}
+                </div>
+              )}
+              <Separator />
+            </CardHeader>
+            {form.getValues("Tags") && form.getValues("Tags").length !== 0 && (
+              <CardContent className="flex gap-2">
+                {form.getValues("Tags")
+                  ? form
+                      .getValues("Tags")
+                      .split(",")
+                      .map((tag) => {
+                        return (
+                          <p
+                            key={tag}
+                            className="text-blue-400 hover:text-blue-600"
+                          >
+                            #{tag}
+                          </p>
+                        );
+                      })
+                  : ""}
+              </CardContent>
+            )}
             <CardContent>
-                <Modal imageUrl={reviewData.imageUrl}/>
+              <p className="flex text-blue-400 hover:text-blue-600 underline gap-2">
+                <Image
+                  src="/icon.png"
+                  alt="Icon Image"
+                  className="rounded"
+                  width={24}
+                  height={24}
+                />
+                {userName}
+              </p>
             </CardContent>
+            {form.getValues("photoUrl") && (
+              <CardContent>
+                <Modal imageUrl={form.getValues("photoUrl")} />
+              </CardContent>
             )}
             <CardContent className="markdown">
-                <ReactMarkDown className="line-clamp-4">
+              <ReactMarkDown className="line-clamp-4">
                 {form.getValues("ReviewContents")}
-                </ReactMarkDown>
+              </ReactMarkDown>
             </CardContent>
-        </Card>
-        //   <>
-        //     <p className="text-sm font-medium">プレビュー</p>
-        //     <Card>
-        //       <CardContent className="markdown">
-        //         <ReactMarkDown>
-        //           {form.getValues("ReviewContents")}
-        //         </ReactMarkDown>
-        //       </CardContent>
-        //     </Card>
-        //   </>
+          </Card>
         )}
-
-        
 
         {isLoading.current ? (
           <Button disabled>
