@@ -35,6 +35,10 @@ import ReactMarkDown from "react-markdown";
 import Image from "next/image";
 import { uploadImage } from "@/actions/image.action";
 import { usePathname } from "next/navigation";
+import { SiDoi } from "react-icons/si";
+import { IoIosPaper } from "react-icons/io";
+import { Separator } from "../ui/separator";
+import { Modal } from "../review/Modal";
 
 // フォームのバリデーションスキーマを定義
 const FormSchema = z.object({
@@ -87,7 +91,7 @@ export function ReviewFormManual({
   const isLoading = useRef(false); // ローディング状態を追跡するためのuseRef
   const [isPreview, setPreview] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   const bePreview = () => {
     setPreview(true);
@@ -112,7 +116,7 @@ export function ReviewFormManual({
       doi: review.doi ? review.doi : "",
       link: review.link ? review.link : "",
       Tags: review.tags ? review.tags.toString() : "",
-      photoUrl: review.imageUrl? review.imageUrl : "",
+      photoUrl: review.imageUrl ? review.imageUrl : "",
     },
   });
 
@@ -145,11 +149,10 @@ export function ReviewFormManual({
 
     try {
       // レビューデータの送信を試みる
-      if(pathname === "/create"){
-        await setReview(userId, reviewData)
-      }
-      else{
-        await updateReview(userId, reviewData); 
+      if (pathname === "/create") {
+        await setReview(userId, reviewData);
+      } else {
+        await updateReview(userId, reviewData);
       }
     } catch (error) {
       console.log(error);
@@ -217,68 +220,6 @@ export function ReviewFormManual({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
-        <FormField
-          control={form.control}
-          name="PaperTitle"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex flex-row gap-1">
-                論文名
-                <p className="text-red-600">*</p>
-              </FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="論文のタイトルを入力してください。"
-                  {...field}
-                  //   value={inputTitle}
-                  onChange={onChangeTitleHandler}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="authors"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex flex-row gap-1">
-                著者名<p className="text-red-600">*</p>
-              </FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="著者名を入力してください。"
-                  {...field}
-                  onChange={onChangeAuthorsHandler}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="year"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex flex-row gap-1">
-                発表年<p className="text-red-600">*</p>
-              </FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="発表された年を入力してください。"
-                  {...field}
-                  onChange={onChangeYearHandler}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <Button
           type="button"
           onClick={beEdit}
@@ -307,212 +248,339 @@ export function ReviewFormManual({
         >
           Preview
         </Button>
-
         {!isPreview ? (
-          <FormField
-            control={form.control}
-            name="ReviewContents"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex flex-row gap-1">
-                  レビュー<p className="text-red-600">*</p>
-                </FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="論文のレビューを入力してください。"
-                    id="message"
-                    rows={10}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        ) : (
           <>
-            <p className="text-sm font-medium">プレビュー</p>
-            <Card>
-              <CardContent className="markdown">
-                <ReactMarkDown>
-                  {form.getValues("ReviewContents")}
-                </ReactMarkDown>
-              </CardContent>
-            </Card>
-          </>
-        )}
+            <FormField
+              control={form.control}
+              name="PaperTitle"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex flex-row gap-1">
+                    論文名
+                    <p className="text-red-600">*</p>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="論文のタイトルを入力してください。"
+                      {...field}
+                      //   value={inputTitle}
+                      onChange={onChangeTitleHandler}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="venue"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>学術会議の名前</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="会議名を入力してください。"
-                  {...field}
-                  onChange={onChangeVenueHandler}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="authors"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex flex-row gap-1">
+                    著者名<p className="text-red-600">*</p>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="著者名を入力してください。"
+                      {...field}
+                      onChange={onChangeAuthorsHandler}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="journal_name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>雑誌名</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="雑誌名を入力してください。"
-                  {...field}
-                  onChange={onChangeJnameHandler}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="year"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex flex-row gap-1">
+                    発表年<p className="text-red-600">*</p>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="発表された年を入力してください。"
+                      {...field}
+                      onChange={onChangeYearHandler}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="journal_pages"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>ページ</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="雑誌でのページを入力してください。"
-                  {...field}
-                  onChange={onChangeJpageHandler}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="journal_vol"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>巻数</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="雑誌での巻数を入力してください。"
-                  {...field}
-                  onChange={onChangeJvolHandler}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="doi"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>DOI</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="DOIを入力してください。"
-                  {...field}
-                  onChange={onChangeDoiHandler}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="link"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>URL</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="URLを入力してください。"
-                  {...field}
-                  onChange={onChangeLinkHandler}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="Tags"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>タグ(半角カンマ区切りで入力)</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="タグを入力してください。"
-                  {...field}
-                  onChange={onChangeTagsHandler}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-<FormField
-          control={form.control}
-          name="photoUrl"
-          render={({ field }) => (
-            <FormItem className='flex flex-col gap-4 w-1/2'>
-              <FormControl className='flex-1 text-base-semibold text-gray-200'>
-                <Input
-                  type='file'
-                  accept='image/*'
-                  placeholder='Add profile photo'
-                  className='account-form_image-input hidden'
-                  onChange={(e) => handleImage(e, field.onChange)}
-                />
-              </FormControl>
-              <FormLabel>画像</FormLabel>
-              <FormLabel className='account-form_image-label'>
-                {field.value ? (
-                  <Image
-                    src={field.value}
-                    alt='reviewImage'
-                    width={1920}
-                    height={1080}
-                    className='object-contain max-h-[30vh]'
-                  />
-                ) : (
-                  <div className="flex justify-center items-center h-[30vh] border-dashed border-2 text-gray-600">
-                    左クリックで画像を選択
-                  </div>
+            {!isPreview ? (
+              <FormField
+                control={form.control}
+                name="ReviewContents"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex flex-row gap-1">
+                      レビュー<p className="text-red-600">*</p>
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="論文のレビューを入力してください。"
+                        id="message"
+                        rows={10}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </FormLabel>
-            </FormItem>
-          )}
-        />
+              />
+            ) : (
+              <>
+                <p className="text-sm font-medium">プレビュー</p>
+                <Card>
+                  <CardContent className="markdown">
+                    <ReactMarkDown>
+                      {form.getValues("ReviewContents")}
+                    </ReactMarkDown>
+                  </CardContent>
+                </Card>
+              </>
+            )}
 
-        {isLoading.current ? (
-          <Button disabled>
-            <Loader2 className="animate-spin" />
-            Please wait
-          </Button>
+            <FormField
+              control={form.control}
+              name="venue"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>学術会議の名前</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="会議名を入力してください。"
+                      {...field}
+                      onChange={onChangeVenueHandler}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="journal_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>雑誌名</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="雑誌名を入力してください。"
+                      {...field}
+                      onChange={onChangeJnameHandler}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="journal_pages"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>ページ</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="雑誌でのページを入力してください。"
+                      {...field}
+                      onChange={onChangeJpageHandler}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="journal_vol"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>巻数</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="雑誌での巻数を入力してください。"
+                      {...field}
+                      onChange={onChangeJvolHandler}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="doi"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>DOI</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="DOIを入力してください。"
+                      {...field}
+                      onChange={onChangeDoiHandler}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="link"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>URL</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="URLを入力してください。"
+                      {...field}
+                      onChange={onChangeLinkHandler}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="Tags"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>タグ(半角カンマ区切りで入力)</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="タグを入力してください。"
+                      {...field}
+                      onChange={onChangeTagsHandler}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="photoUrl"
+              render={({ field }) => (
+                <FormItem className="flex flex-col gap-4 w-1/2">
+                  <FormControl className="flex-1 text-base-semibold text-gray-200">
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      placeholder="Add profile photo"
+                      className="account-form_image-input hidden"
+                      onChange={(e) => handleImage(e, field.onChange)}
+                    />
+                  </FormControl>
+                  <FormLabel>画像</FormLabel>
+                  <FormLabel className="account-form_image-label">
+                    {field.value ? (
+                      <Image
+                        src={field.value}
+                        alt="reviewImage"
+                        width={1920}
+                        height={1080}
+                        className="object-contain max-h-[30vh]"
+                      />
+                    ) : (
+                      <div className="flex justify-center items-center h-[30vh] border-dashed border-2 text-gray-600">
+                        左クリックで画像を選択
+                      </div>
+                    )}
+                  </FormLabel>
+                </FormItem>
+              )}
+            />
+          </>
         ) : (
-          <div className="flex flex-row gap-3">
-            <Button type="submit">Save</Button>
-            <CancelCreateReview />
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="truncate leading-normal text-blue-600 hover:text-blue-400 hover:underline">
+                {form.getValues("PaperTitle")}
+              </CardTitle>
+              <CardDescription>{form.getValues("authors")}</CardDescription>
+              <CardDescription>
+                {form.getValues("journal_name") ? form.getValues("journal_name") + "." : ""}
+                {form.getValues("year") ? form.getValues("year") + "." : ""}
+                {form.getValues("journal_vol") ? form.getValues("journal_vol") + "." : ""}
+                {form.getValues("journal_pages") ? form.getValues("journal_pages") + "." : ""}
+              </CardDescription>
+              {(form.getValues("doi") || form.getValues("link")) && (
+                <div className="flex flex-row gap-2 py-3">
+                  {form.getValues("doi") && <SiDoi size="2rem" />}
+                  {form.getValues("link") && <IoIosPaper size="2rem" />}
+                </div>
+              )}
+              <Separator />
+            </CardHeader>
+            {form.getValues("Tags") && form.getValues("Tags").length !== 0 && (
+              <CardContent className="flex gap-2">
+                {form.getValues("Tags")
+                  ? form
+                      .getValues("Tags")
+                      .split(",")
+                      .map((tag) => {
+                        return (
+                          <p
+                            key={tag}
+                            className="text-blue-400 hover:text-blue-600"
+                          >
+                            #{tag}
+                          </p>
+                        );
+                      })
+                  : ""}
+              </CardContent>
+            )}
+            <CardContent>
+              <p className="flex text-blue-400 hover:text-blue-600 underline gap-2">
+                <Image
+                  src="/icon.png"
+                  alt="Icon Image"
+                  className="rounded"
+                  width={24}
+                  height={24}
+                />
+                {userName}
+              </p>
+            </CardContent>
+            {form.getValues("photoUrl") && (
+              <CardContent>
+                <Modal imageUrl={form.getValues("photoUrl")} />
+              </CardContent>
+            )}
+            <CardContent className="markdown">
+              <ReactMarkDown className="line-clamp-4">
+                {form.getValues("ReviewContents")}
+              </ReactMarkDown>
+            </CardContent>
+          </Card>
         )}
+        {isLoading.current ? (
+              <Button disabled>
+                <Loader2 className="animate-spin" />
+                Please wait
+              </Button>
+            ) : (
+              <div className="flex flex-row gap-3">
+                <Button type="submit">Save</Button>
+                <CancelCreateReview />
+              </div>
+            )}
       </form>
     </Form>
   );
