@@ -60,7 +60,7 @@ export function HeaderContents({ user }: { user?: userType }) {
                 </a>
               </div>
             </div>
-            <Link href="/sign-in" className="flex text-lg px-2 py-1 flex-row gap-4 justify-center hover:underline">
+            <Link href="/sign-in" className="flex text-lg px-2 py-1 flex-row gap-4 items-center justify-center hover:underline">
               <RiLoginBoxLine />サインイン
             </Link>
           </div>
@@ -144,7 +144,7 @@ export function HeaderContents({ user }: { user?: userType }) {
               </a>
             </div>
           </div>
-          <button onClick={() => signOut()} className="flex text-lg px-2 py-1 flex-row gap-4 justify-center hover:underline">
+          <button onClick={() => signOut()} className="flex text-lg px-2 py-1 flex-row gap-4 items-center justify-center hover:underline">
             <RiLogoutBoxRLine /> サインアウト
           </button>
         </div>
