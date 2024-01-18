@@ -92,7 +92,7 @@ const Review = ({
     <Card>
       <CardHeader>
         <Link href={`/review/${reviewData.id}`}>
-          <CardTitle className="truncate leading-normal text-blue-600 hover:text-blue-400 underline">
+          <CardTitle className="truncate leading-normal text-blue-600 hover:text-blue-400 hover:underline">
             {reviewData.paperTitle}
           </CardTitle>
         </Link>
