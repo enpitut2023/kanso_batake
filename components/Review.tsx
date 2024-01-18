@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactMarkDown from "react-markdown";
 import {
   Card,
@@ -45,13 +45,48 @@ const Review = ({
     await deleteReview(reviewData, userId);
   };
 
-  const [isClamp, setIsClamp] = useState<boolean>(true);
+  const [nowClamp, setNowClamp] = useState<boolean>(true);
   const onClickClampHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
     // ページの上部への移動をキャンセル
     e.preventDefault();
     // リンクがクリックされたときに「すべて読む」の表示を切り替え
-    setIsClamp(!isClamp);
+    setNowClamp(!nowClamp);
   };
+
+  // 描画されているレビューの行数をカウントする
+  const [lineCount, setLineCount] = useState<number>(1);
+  const textRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const div = textRef.current
+    if (!div) return 
+    const calculateTextInfo = () => {
+      if (textRef.current) {
+        const textElement = textRef.current;
+        const containerHeight = textElement.clientHeight;
+        const lineHeight = parseFloat(getComputedStyle(textElement).lineHeight);
+        const calculatedLineCount = Math.floor(containerHeight / lineHeight);
+        setLineCount(calculatedLineCount);
+      }
+    };
+    window.addEventListener('resize', calculateTextInfo);
+    calculateTextInfo(); // 初回表示時にも計算
+    return () => {
+      window.removeEventListener('resize', calculateTextInfo);
+    };
+  }, []);
+  // 「すべて読む」「一部を表示」表示なしの分岐
+  // 1:「すべて読む」, 2:「一部を表示」, 0:表示なし(clampなし)
+  const getReadAllFlag = (
+    {clamp, nowClamp, lineCount}: {clamp: boolean, lineCount: number, nowClamp: boolean}) => {
+    if (clamp && lineCount >= 5 && nowClamp){
+      return 1
+    }else if (clamp && lineCount >= 5 && !nowClamp) {
+      return 2
+    } else {
+      return 0
+    }
+  }
+  const readAllFlag = getReadAllFlag({clamp, nowClamp, lineCount})
 
   return (
     <Card>
@@ -154,31 +189,29 @@ const Review = ({
           {reviewData.reviewerName}
         </Link>
       </CardContent>
-      {clamp
-        ? isClamp
-          ? <>
-              <CardContent className="markdown">
-                <ReactMarkDown className="line-clamp-4">{reviewData.contents}</ReactMarkDown>
-              </CardContent>
-              <CardContent>
-              <Link href="#" onClick={onClickClampHandler} className="flex text-blue-400 hover:text-blue-600 underline gap-2">
+      {readAllFlag==1
+        ? <><CardContent className="markdown">
+              <ReactMarkDown className="line-clamp-4">{reviewData.contents}</ReactMarkDown>
+            </CardContent>
+            <CardContent>
+              <a href="#" onClick={onClickClampHandler}
+                className="flex text-blue-400 hover:text-blue-600 underline gap-2">
                 すべて読む
-              </Link>
-              </CardContent>
-            </>
-          : <>
-              <CardContent className="markdown">
+              </a>
+            </CardContent>
+          </>
+        : readAllFlag==2
+          ? <><CardContent className="markdown">
                 <ReactMarkDown className="">{reviewData.contents}</ReactMarkDown>
-              </CardContent>
-              <CardContent>
-              <Link href="#" onClick={onClickClampHandler} className="flex text-blue-400 hover:text-blue-600 underline gap-2">
-                一部を表示
-              </Link>
-              </CardContent>
+              </CardContent><CardContent>
+                  <a href="#" onClick={onClickClampHandler} className="flex text-blue-400 hover:text-blue-600 underline gap-2">
+                    一部を表示
+                  </a>
+                </CardContent>
             </>
-        : <CardContent className="markdown">
-            <ReactMarkDown className="">{reviewData.contents}</ReactMarkDown>
-          </CardContent>
+          : <CardContent ref={textRef} className="markdown">
+              <ReactMarkDown className="">{reviewData.contents}</ReactMarkDown>
+            </CardContent>
       }
     </Card>
   );
