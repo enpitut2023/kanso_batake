@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
 import React, { useEffect, useRef, useState } from "react";
 import ReactMarkDown from "react-markdown";
-import remarkBreaks from "remark-breaks"
+import remarkBreaks from "remark-breaks";
 import {
   Card,
   CardContent,
@@ -33,62 +33,20 @@ import { FaRegEdit } from "react-icons/fa";
 import icon from "@/public/icon.png";
 import { deleteReview } from "@/actions/review.action";
 import { Modal } from "./review/Modal";
+import clsx from "clsx";
 
 const Review = ({
   reviewData,
   userId,
-  clamp,
+  clamp
 }: {
   reviewData: reviewType;
   userId?: string;
-  clamp?: boolean;
+  clamp?: boolean
 }) => {
   const deleteButton_clickHandler = async () => {
     await deleteReview(reviewData, userId);
   };
-
-  const [nowClamp, setNowClamp] = useState<boolean>(true);
-  const onClickClampHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    // ページの上部への移動をキャンセル
-    e.preventDefault();
-    // リンクがクリックされたときに「すべて読む」の表示を切り替え
-    setNowClamp(!nowClamp);
-  };
-
-  // 描画されているレビューの行数をカウントする
-  const [lineCount, setLineCount] = useState<number>(1);
-  const textRef = useRef<HTMLDivElement | null>(null);
-  useEffect(() => {
-    const div = textRef.current
-    if (!div) return 
-    const calculateTextInfo = () => {
-      if (textRef.current) {
-        const textElement = textRef.current;
-        const containerHeight = textElement.clientHeight;
-        const lineHeight = parseFloat(getComputedStyle(textElement).lineHeight);
-        const calculatedLineCount = Math.floor(containerHeight / lineHeight);
-        setLineCount(calculatedLineCount);
-      }
-    };
-    window.addEventListener('resize', calculateTextInfo);
-    calculateTextInfo(); // 初回表示時にも計算
-    return () => {
-      window.removeEventListener('resize', calculateTextInfo);
-    };
-  }, []);
-  // 「すべて読む」「一部を表示」表示なしの分岐
-  // 1:「すべて読む」, 2:「一部を表示」, 0:表示なし(clampなし)
-  const getReadAllFlag = (
-    {clamp, nowClamp, lineCount}: {clamp?: boolean, lineCount: number, nowClamp: boolean}) => {
-    if (clamp && lineCount >= 5 && nowClamp){
-      return 1
-    }else if (clamp && lineCount >= 5 && !nowClamp) {
-      return 2
-    } else {
-      return 0
-    }
-  }
-  const readAllFlag = getReadAllFlag({clamp, nowClamp, lineCount})
 
   return (
     <Card>
@@ -108,12 +66,20 @@ const Review = ({
         {(reviewData.doi || reviewData.link) && (
           <div className="flex flex-row gap-2 py-3">
             {reviewData.doi && (
-              <a href={`https://www.doi.org/${reviewData.doi}`} target="_blank" className="transform hover:scale-110 motion-reduce:transform-none">
+              <a
+                href={`https://www.doi.org/${reviewData.doi}`}
+                target="_blank"
+                className="transform hover:scale-110 motion-reduce:transform-none"
+              >
                 <SiDoi size="2rem" />
               </a>
             )}
             {reviewData.link && (
-              <a href={`${reviewData.link}`} target="_blank" className="transform hover:scale-110 motion-reduce:transform-none">
+              <a
+                href={`${reviewData.link}`}
+                target="_blank"
+                className="transform hover:scale-110 motion-reduce:transform-none"
+              >
                 <IoIosPaper size="2rem" />
               </a>
             )}
@@ -165,7 +131,8 @@ const Review = ({
           {reviewData.tags
             ? reviewData.tags.map((tag) => {
                 return (
-                  <Link key={tag}
+                  <Link
+                    key={tag}
                     href={`?tag=${tag}`}
                     className="text-blue-400 hover:text-blue-600"
                   >
@@ -191,49 +158,24 @@ const Review = ({
           {reviewData.reviewerName}
         </Link>
       </CardContent>
-        {reviewData.imageUrl && (
-          <CardContent>
-            <Modal imageUrl={reviewData.imageUrl}/>
-          </CardContent>
-        )}
-      {readAllFlag==1
-        ? <><CardContent className="markdown">
-              <ReactMarkDown
-                className="line-clamp-4"
-                remarkPlugins={[remarkBreaks]}
-                components={{
-                    p: ({ children }) => <p style={{ marginBottom: "1em" }}>{children}</p>,
-                }}>{reviewData.contents}</ReactMarkDown>
-            </CardContent>
-            <CardContent>
-              <a href="#" onClick={onClickClampHandler}
-                className="flex text-blue-400 hover:text-blue-600 underline gap-2">
-                すべて読む
-              </a>
-            </CardContent>
-          </>
-        : readAllFlag==2
-          ? <><CardContent className="markdown">
-                <ReactMarkDown
-                remarkPlugins={[remarkBreaks]}
-                components={{
-                    p: ({ children }) => <p style={{ marginBottom: "1em" }}>{children}</p>,
-                }}>{reviewData.contents}</ReactMarkDown>
-              </CardContent><CardContent>
-                  <a href="#" onClick={onClickClampHandler} className="flex text-blue-400 hover:text-blue-600 underline gap-2">
-                    一部を表示
-                  </a>
-                </CardContent>
-            </>
-          : <CardContent ref={textRef} className="markdown">
-              <ReactMarkDown
-                remarkPlugins={[remarkBreaks]}
-                components={{
-                    p: ({ children }) => <p style={{ marginBottom: "1em" }}>{children}</p>,
-                }}>{reviewData.contents}
-                </ReactMarkDown>
-            </CardContent>
-      }
+      {reviewData.imageUrl && (
+        <CardContent>
+          <Modal imageUrl={reviewData.imageUrl} />
+        </CardContent>
+      )}
+      <CardContent className="markdown" >
+        <ReactMarkDown
+          className={clsx(clamp ? "line-clamp-4" : "")}
+          remarkPlugins={[remarkBreaks]}
+          components={{
+            p: ({ children }) => (
+              <p style={{ marginBottom: "1em" }}>{children}</p>
+            ),
+          }}
+        >
+          {reviewData.contents}
+        </ReactMarkDown>
+      </CardContent>
     </Card>
   );
 };

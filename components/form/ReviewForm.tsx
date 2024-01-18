@@ -295,7 +295,7 @@ export function ReviewForm({
                 </FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="論文のレビューを入力してください。"
+                    placeholder="論文のレビューを入力してください。[Markdown is supported]"
                     id="message"
                     rows={10}
                     {...field}
