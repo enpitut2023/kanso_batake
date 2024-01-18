@@ -199,6 +199,7 @@ const Review = ({
       {readAllFlag==1
         ? <><CardContent className="markdown">
               <ReactMarkDown
+                className="line-clamp-4"
                 remarkPlugins={[remarkBreaks]}
                 components={{
                     p: ({ children }) => <p style={{ marginBottom: "1em" }}>{children}</p>,
