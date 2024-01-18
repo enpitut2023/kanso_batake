@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import ReactMarkDown from "react-markdown";
+import remarkBreaks from "remark-breaks"
 import {
   Card,
   CardContent,
@@ -197,7 +198,11 @@ const Review = ({
         )}
       {readAllFlag==1
         ? <><CardContent className="markdown">
-              <ReactMarkDown className="line-clamp-4">{reviewData.contents}</ReactMarkDown>
+              <ReactMarkDown
+                remarkPlugins={[remarkBreaks]}
+                components={{
+                    p: ({ children }) => <p style={{ marginBottom: "1em" }}>{children}</p>,
+                }}>{reviewData.contents}</ReactMarkDown>
             </CardContent>
             <CardContent>
               <a href="#" onClick={onClickClampHandler}
@@ -208,7 +213,11 @@ const Review = ({
           </>
         : readAllFlag==2
           ? <><CardContent className="markdown">
-                <ReactMarkDown className="">{reviewData.contents}</ReactMarkDown>
+                <ReactMarkDown
+                remarkPlugins={[remarkBreaks]}
+                components={{
+                    p: ({ children }) => <p style={{ marginBottom: "1em" }}>{children}</p>,
+                }}>{reviewData.contents}</ReactMarkDown>
               </CardContent><CardContent>
                   <a href="#" onClick={onClickClampHandler} className="flex text-blue-400 hover:text-blue-600 underline gap-2">
                     一部を表示
@@ -216,7 +225,12 @@ const Review = ({
                 </CardContent>
             </>
           : <CardContent ref={textRef} className="markdown">
-              <ReactMarkDown className="">{reviewData.contents}</ReactMarkDown>
+              <ReactMarkDown
+                remarkPlugins={[remarkBreaks]}
+                components={{
+                    p: ({ children }) => <p style={{ marginBottom: "1em" }}>{children}</p>,
+                }}>{reviewData.contents}
+                </ReactMarkDown>
             </CardContent>
       }
     </Card>

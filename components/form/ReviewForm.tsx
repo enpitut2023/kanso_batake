@@ -4,7 +4,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-
+import remarkBreaks from "remark-breaks"
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -310,7 +310,11 @@ export function ReviewForm({
             <p className="text-sm font-medium">プレビュー</p>
             <Card>
               <CardContent className="markdown">
-                <ReactMarkDown>
+                <ReactMarkDown
+                    remarkPlugins={[remarkBreaks]}
+                    components={{
+                        p: ({ children }) => <p style={{ marginBottom: "1em" }}>{children}</p>,
+                    }}>
                   {form.getValues("ReviewContents")}
                 </ReactMarkDown>
               </CardContent>
