@@ -1,14 +1,14 @@
 "use client"
 
 import React from 'react'
-import { Button } from './ui/button'
+import { Button } from '../ui/button'
 import { useRouter } from 'next/navigation'
 
-const CalcelCreateReview = () => {
+const CancelCreateReview = () => {
   const router = useRouter()
 
   const clickHandler = () => {
-    router.push("/")
+    router.back()
   }
 
   return (
@@ -18,4 +18,4 @@ const CalcelCreateReview = () => {
   )
 }
 
-export default CalcelCreateReview
+export default CancelCreateReview

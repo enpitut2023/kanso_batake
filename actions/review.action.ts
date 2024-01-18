@@ -3,19 +3,24 @@
 import {
   collection,
   getDocs,
+  getDoc,
   setDoc,
   doc,
   query,
   orderBy,
   where,
+  updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import db from "@/lib/firebase/store";
 import { reviewType } from "@/constants";
-import { revalidatePath, unstable_noStore } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { storage } from "@/lib/firebase/storage";
+import { ref } from "firebase/storage";
+import { deleteImage } from "./image.action";
 
 export async function getAllReviews() {
-  unstable_noStore();
   const col = query(collection(db, "reviews"), orderBy("id", "desc"));
 
   let result: reviewType[] = [];
@@ -27,6 +32,20 @@ export async function getAllReviews() {
   return result;
 }
 
+export async function fetchReview(reviewId: string) {
+  try {
+    const reviewData = await getDoc(doc(db, `reviews/${reviewId}`));
+    if (reviewData.exists()) {
+      return reviewData.data() as reviewType;
+    } else {
+      throw new Error("Failed to fetch review.");
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error("Failed to fetch review.");
+  }
+}
+
 export async function setReview(userId: string, reviewData: reviewType) {
   await Promise.all([
     setDoc(doc(db, `reviews/${reviewData.id}`), reviewData),
@@ -35,6 +54,27 @@ export async function setReview(userId: string, reviewData: reviewType) {
 
   revalidatePath("/create");
   redirect("/");
+}
+
+export async function updateReview(userId: string, reviewData: reviewType) {
+  await Promise.all([
+    updateDoc(doc(db, `reviews/${reviewData.id}`), reviewData),
+    updateDoc(doc(db, `users/${userId}/reviews/${reviewData.id}`), reviewData),
+  ]);
+
+  revalidatePath(`/user/${userId}`);
+  redirect(`/user/${userId}`);
+}
+
+export async function deleteReview(reviewData: reviewType, userId?: string) {
+  await Promise.all([
+    deleteImage(reviewData.id),
+    deleteDoc(doc(db, `reviews/${reviewData.id}`)),
+    deleteDoc(doc(db, `users/${userId}/reviews/${reviewData.id}`)),
+  ]);
+
+  revalidatePath(`/user/${userId}`);
+  redirect(`/user/${userId}`);
 }
 
 export async function fetchReviewsByUser(userId: string) {

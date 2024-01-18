@@ -1,7 +1,7 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import "../globals.css";
-import Header from "@/components/Header";
+import Header from "@/components/layout/Header";
 
 export const metadata: Metadata = {
   title: "感想畑",
@@ -20,7 +20,7 @@ export default function RootLayout({
       <html lang="en">
         <body className="flex flex-col">
           <Header />
-          <div className="container max-w-5xl mt-20 pb-5">{children}</div>
+          <div className="container max-w-5xl mt-20 pt-5 pb-5">{children}</div>
         </body>
       </html>
     </ClerkProvider>
