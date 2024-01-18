@@ -4,7 +4,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-
+import { Separator } from "../ui/separator";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -40,7 +40,9 @@ import {
 } from "@/components/ui/popover";
 import { useDebouncedCallback } from "use-debounce";
 import { cn } from "@/lib/utils";
-
+import { Modal } from "../review/Modal";
+import { SiDoi } from "react-icons/si";
+import { IoIosPaper } from "react-icons/io";
 import { delEmpty_tag } from "@/lib/utils";
 import {
   Card,
@@ -213,8 +215,39 @@ export function ReviewForm({
   return (
     <Form {...form}>
       <Toaster />
+      
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
-        <FormField
+      <Button
+          type="button"
+          onClick={beEdit}
+          className={`
+            ${
+              !isPreview
+                ? "bg-white border border-gray-300 hover:bg-white  text-gray-800"
+                : "bg-gray-200 text-gray-800 hover:bg-gray-300 focus:border-gray-400 focus:ring focus:ring-gray-200"
+            }
+            px-4 py-2 rounded-none rounded-l-md text-xs w-fit
+        `}
+        >
+          Edit
+        </Button>
+        <Button
+          type="button"
+          onClick={bePreview}
+          className={`
+            ${
+              isPreview
+                ? "bg-white border border-gray-300 hover:bg-white text-gray-800"
+                : "bg-gray-200 text-gray-800 hover:bg-gray-300 focus:border-gray-400 focus:ring focus:ring-gray-200"
+            }
+            px-4 py-2 rounded-none rounded-r-md text-xs w-fit
+        `}
+        >
+          Preview
+        </Button>
+        {!isPreview ? (
+          <>
+          <FormField
           control={form.control}
           name="title"
           render={({ field }) => (
@@ -254,38 +287,7 @@ export function ReviewForm({
             </FormItem>
           )}
         />
-
-        <Button
-          type="button"
-          onClick={beEdit}
-          className={`
-            ${
-              !isPreview
-                ? "bg-white border border-gray-300 hover:bg-white  text-gray-800"
-                : "bg-gray-200 text-gray-800 hover:bg-gray-300 focus:border-gray-400 focus:ring focus:ring-gray-200"
-            }
-            px-4 py-2 rounded-none rounded-l-md text-xs w-fit
-        `}
-        >
-          Edit
-        </Button>
-        <Button
-          type="button"
-          onClick={bePreview}
-          className={`
-            ${
-              isPreview
-                ? "bg-white border border-gray-300 hover:bg-white text-gray-800"
-                : "bg-gray-200 text-gray-800 hover:bg-gray-300 focus:border-gray-400 focus:ring focus:ring-gray-200"
-            }
-            px-4 py-2 rounded-none rounded-r-md text-xs w-fit
-        `}
-        >
-          Preview
-        </Button>
-
-        {!isPreview ? (
-          <FormField
+        <FormField
             control={form.control}
             name="ReviewContents"
             render={({ field }) => (
@@ -305,20 +307,7 @@ export function ReviewForm({
               </FormItem>
             )}
           />
-        ) : (
-          <>
-            <p className="text-sm font-medium">プレビュー</p>
-            <Card>
-              <CardContent className="markdown">
-                <ReactMarkDown>
-                  {form.getValues("ReviewContents")}
-                </ReactMarkDown>
-              </CardContent>
-            </Card>
-          </>
-        )}
-
-        <FormField
+          <FormField
           control={form.control}
           name="Tags"
           render={({ field }) => (
@@ -335,7 +324,6 @@ export function ReviewForm({
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="photoUrl"
@@ -369,7 +357,85 @@ export function ReviewForm({
               </FormLabel>
             </FormItem>
           )}
-        />
+        /></>
+        ) : (
+            <Card>
+        <CardHeader>
+            <CardTitle className="truncate leading-normal text-blue-600 hover:text-blue-400 hover:underline">
+                {form.getValues("title")}
+            </CardTitle>
+            <CardDescription>{paper.authors[0].name}</CardDescription>
+            <CardDescription>
+            {paper.journal.name? paper.journal.name + "." : ""}
+            {paper.year ? paper.year + "." : ""}
+            {paper.journal.volume ? paper.journal.volume + "." : ""}
+            {paper.journal.pages ? paper.journal.pages + "." : ""}
+            </CardDescription>
+            {(paper.externalIds.DOI || paper.url) && (
+            <div className="flex flex-row gap-2 py-3">
+                {paper.externalIds.DOI && (
+                <SiDoi size="2rem" />
+                )}
+                {paper.url && (
+                    <IoIosPaper size="2rem" />
+                )}
+            </div>
+            )}
+            <Separator />
+        </CardHeader>
+        {form.getValues("Tags") && form.getValues("Tags").length !== 0 && (
+            <CardContent className="flex gap-2">
+            {form.getValues("Tags")
+                ? form.getValues("Tags").map((tag) => {
+                    return (
+                    <p key={tag}
+                        className="text-blue-400 hover:text-blue-600"
+                    >
+                        #{tag}
+                    </p>
+                    );
+                })
+                : ""}
+            </CardContent>
+        )}
+        <CardContent>
+            <p
+            className="flex text-blue-400 hover:text-blue-600 underline gap-2"
+            >
+            <Image
+                src={icon}
+                alt="Icon Image"
+                className="rounded"
+                width={24}
+                height={24}
+            />
+            {reviewData.reviewerName}
+            </p>
+        </CardContent>
+            {reviewData.imageUrl && (
+            <CardContent>
+                <Modal imageUrl={reviewData.imageUrl}/>
+            </CardContent>
+            )}
+            <CardContent className="markdown">
+                <ReactMarkDown className="line-clamp-4">
+                {form.getValues("ReviewContents")}
+                </ReactMarkDown>
+            </CardContent>
+        </Card>
+        //   <>
+        //     <p className="text-sm font-medium">プレビュー</p>
+        //     <Card>
+        //       <CardContent className="markdown">
+        //         <ReactMarkDown>
+        //           {form.getValues("ReviewContents")}
+        //         </ReactMarkDown>
+        //       </CardContent>
+        //     </Card>
+        //   </>
+        )}
+
+        
 
         {isLoading.current ? (
           <Button disabled>
