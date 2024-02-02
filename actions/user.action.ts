@@ -2,7 +2,7 @@
 
 import { userType } from "@/constants";
 import db from "@/lib/firebase/store";
-import { arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, setDoc, updateDoc, getDocs, collection } from "firebase/firestore";
 
 export async function fetchUser(userId: string) {
   try {
@@ -48,5 +48,24 @@ export async function setUser(userData: userType) {
     ]);
   } catch (error) {
     throw new Error("Failed to set user.");
+  }
+}
+
+//userIdさんと同じ分野を持つ別人たちを返す。返り値は、userType[].
+export async function getSameFieldUsers(userId: string) {
+  let user=fetchUser(userId) as unknown;
+  let user_:userType = user as userType;
+  let users:userType[]=[];
+  try{
+    const usersSnapshot = await getDocs(collection(db, "users"));
+    usersSnapshot.forEach((doc) => {
+      if(doc.id!=userId && (doc.data() as userType).field==user_.field){
+        users.push(doc.data() as userType)
+      }
+    });
+    return users;
+  }catch(error){
+    console.log(error)
+    throw new Error("Failed to fetch users.")
   }
 }
