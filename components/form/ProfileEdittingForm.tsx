@@ -125,6 +125,7 @@ export function ProfileEdittingForm({
                 <Input placeholder="名前を入力してください" 
                 {...field} 
                 onChange={onChangeUsernameHandler}
+                disabled
               />
               </FormControl>
               <FormMessage />
@@ -151,6 +152,7 @@ export function ProfileEdittingForm({
                         "w-full justify-between",
                         !field.value && "text-muted-foreground"
                       )}
+                      disabled
                     >
                       {field.value
                         ? affiliations.find(
@@ -264,7 +266,7 @@ export function ProfileEdittingForm({
           render={({ field }) => (
             <FormItem>
               <FormLabel className="flex flex-row gap-1">役職<p className="text-red-600">*</p></FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} defaultValue={field.value} disabled>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="役職を選択" />
@@ -289,6 +291,7 @@ export function ProfileEdittingForm({
                 <Input placeholder="URLを入力してください"
                 {...field} 
                 onChange={onChangeWorksHandler}
+                disabled
               />
               </FormControl>
               <FormMessage />
@@ -302,7 +305,7 @@ export function ProfileEdittingForm({
           </Button>
         ) : (
           <div className="flex flex-row gap-3">
-            <Button type="submit">Submit</Button>
+            <Button type="submit" disabled>Submit</Button>
           </div>
         )}
       </form>
