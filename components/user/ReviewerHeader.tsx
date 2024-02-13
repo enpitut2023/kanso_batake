@@ -8,10 +8,12 @@ import {
 } from "@/components/ui/card"
 
 import { fetchUser } from '@/actions/user.action'
+import { currentUser } from '@clerk/nextjs';
 
 const ReviewHeader = async (
 	{ userId } : {userId: string}
 ) => {
+	const currentuser = await currentUser();
 	const user = await fetchUser(userId)
   
 	return ( 
@@ -32,9 +34,16 @@ const ReviewHeader = async (
 						return (<p key={work}>URL: <a href={work} target='_blank'>{work}</a></p>)
 					})}
 			</div>
-
+			<div className="flex flex-row-reverse leading-normal text-blue-600 hover:text-blue-400 hover:underline">
+				{userId == currentuser?.id && (
+				<a href={`/profile/${userId}`} target="">
+					ユーザ情報を編集する
+				</a>
+				)}
+			</div>
 		</CardHeader>
 		<CardContent className='break-words whitespace-pre-line'>
+			
 		</CardContent>
 	</Card>
 	)
