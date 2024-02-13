@@ -1,5 +1,5 @@
 import { fetchUser } from '@/actions/user.action';
-import { OnboadingForm } from '@/components/form/OnboardingForm'
+import { ProfileEdittingForm } from '@/components/form/ProfileEdittingForm';
 import { currentUser } from '@clerk/nextjs'
 import React from 'react'
 
@@ -18,7 +18,7 @@ const page = async(
       <h1 className='text-3xl font-bold mb-5'>
         ユーザー情報の修正
       </h1>
-      <OnboadingForm userId={user.id} />
+      <ProfileEdittingForm userId={user.id} />
     </div>
   )
 }
