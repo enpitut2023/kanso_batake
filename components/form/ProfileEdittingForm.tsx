@@ -31,7 +31,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { setUser } from "@/actions/user.action";
+import { fetchUser, setUser } from "@/actions/user.action";
 import {
   Select,
   SelectContent,
@@ -58,19 +58,32 @@ const FormSchema = z.object({
   url: z.string().optional(),
 });
 
-export function ProfileEdittingForm({ userId }: { userId: string }) {
+export function ProfileEdittingForm({ 
+  user 
+}: { 
+  user: userType 
+}) {
   const isLoading = useRef(false);
   const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+        // フォームフィールドのデフォルト値を設定
+        username: user.name ? user.name : "",
+        affiliation: user.affiliation ? user.affiliation.toString() : "",
+        field: user.field ? user.field.toString() : "",
+        role: user.role ? user.role : "",
+        url: user.works ? user.works.toString() : "",
+        
+      },
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     isLoading.current = true;
 
     const userData: userType = {
-      id: userId,
+      id: user.id,
       name: data.username,
       affiliation: [data.affiliation],
       field: [data.field],
@@ -78,9 +91,26 @@ export function ProfileEdittingForm({ userId }: { userId: string }) {
       works: [data.url || ""],
     };
 
-    await setUser(userData);
+    // await setUser();
+    // await updateuser(userData);
     router.push("/");
   }
+
+  const onChangeUsernameHandler = async (e: { target: { value: string } }) => {
+    form.setValue("username", e.target.value);
+  };
+  // const onChangeAffiliationHandler = async (e: { target: { value: string } }) => {
+  //   form.setValue("affiliation", e.target.value);
+  // };
+  // const onChangeFieldHandler = async (e: { target: { value: string } }) => {
+  //   form.setValue("field", e.target.value);
+  // };
+  // const onChangeRoleHandler = async (e: { target: { value: string } }) => {
+  //   form.setValue("role", e.target.value);
+  // };
+  const onChangeWorksHandler = async (e: { target: { value: string } }) => {
+    form.setValue("url", e.target.value);
+  };
 
   return (
     <Form {...form}>
@@ -92,7 +122,10 @@ export function ProfileEdittingForm({ userId }: { userId: string }) {
             <FormItem className="flex flex-col">
               <FormLabel className="flex flex-row gap-1">名前<p className="text-red-600">*</p></FormLabel>
               <FormControl>
-                <Input placeholder="名前を入力してください" {...field} />
+                <Input placeholder="名前を入力してください" 
+                {...field} 
+                onChange={onChangeUsernameHandler}
+              />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -253,7 +286,10 @@ export function ProfileEdittingForm({ userId }: { userId: string }) {
             <FormItem className="flex flex-col">
               <FormLabel>実績が分かるリンク</FormLabel>
               <FormControl>
-                <Input placeholder="URLを入力してください" {...field} />
+                <Input placeholder="URLを入力してください"
+                {...field} 
+                onChange={onChangeWorksHandler}
+              />
               </FormControl>
               <FormMessage />
             </FormItem>

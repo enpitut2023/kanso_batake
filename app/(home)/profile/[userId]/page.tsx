@@ -6,7 +6,7 @@ import React from 'react'
 const page = async(
   { params: { userId }} : { params : { userId: string }}
 ) => {
-  const user = await currentUser();
+  const user = await fetchUser(userId);
   console.log(user?.id)
   if(!user){
     console.log("null")
@@ -18,7 +18,7 @@ const page = async(
       <h1 className='text-3xl font-bold mb-5'>
         ユーザー情報の修正
       </h1>
-      <ProfileEdittingForm userId={user.id} />
+      <ProfileEdittingForm user={user} />
     </div>
   )
 }
