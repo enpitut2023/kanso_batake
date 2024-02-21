@@ -53,6 +53,7 @@ export async function setUser(userData: userType) {
 
 // reviewsコレクション内のreviewのユーザー情報を更新
 async function updateUserInfoOnReview(userData: userType) {
+  // reviewsコレクション内の書き換え
   const col = query(
     collection(db, `reviews`),
     where("createdBy", "==", userData.id)
@@ -67,6 +68,17 @@ async function updateUserInfoOnReview(userData: userType) {
     });
   } catch(e) {
     throw new Error("Failed to update user info on review.");
+  }
+
+  // users コレクション内のreviewsサブコレクションの書き換え
+  try {
+    const allUserReviewsSnapshot = await getDocs(collection(db, `users/${userData.id}/reviews`));
+    allUserReviewsSnapshot.forEach((docSnap) => {
+        docRef = doc(db, `users/${userData.id}/reviews`, docSnap.id);
+        updateDoc(docRef, {"reviewerName": userData.name, "reviewerFields":userData.field});
+    })
+  } catch(e) {
+    throw new Error("Fialed to update user info on user's review.");
   }
 }
 
