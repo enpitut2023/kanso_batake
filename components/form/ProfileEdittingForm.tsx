@@ -112,7 +112,7 @@ export function ProfileEdittingForm({
               <FormControl>
                 <Input placeholder="名前を入力してください" 
                 {...field} 
-                // disabled
+                disabled
               />
               </FormControl>
               <FormMessage />
@@ -139,7 +139,7 @@ export function ProfileEdittingForm({
                         "w-full justify-between",
                         !field.value && "text-muted-foreground"
                       )}
-                      // disabled
+                      disabled
                     >
                       {field.value
                         ? affiliations.find(
@@ -256,7 +256,7 @@ export function ProfileEdittingForm({
               <Select 
                 onValueChange={field.onChange} 
                 defaultValue={field.value} 
-                // disabled
+                disabled
                 >
                 <FormControl>
                   <SelectTrigger>
@@ -281,7 +281,7 @@ export function ProfileEdittingForm({
               <FormControl>
                 <Input placeholder="URLを入力してください"
                 {...field} 
-                // disabled
+                disabled
               />
               </FormControl>
               <FormMessage />
