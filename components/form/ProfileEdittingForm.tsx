@@ -99,22 +99,6 @@ export function ProfileEdittingForm({
     router.push(`/user/${user.id}`);
   }
 
-  // const onChangeUsernameHandler = async (e: { target: { value: string } }) => {
-  //   form.setValue("username", e.target.value);
-  // };
-  // const onChangeAffiliationHandler = async (e: { target: { value: string } }) => {
-  //   form.setValue("affiliation", e.target.value);
-  // };
-  // const onChangeFieldHandler = async (e: { target: { value: string } }) => {
-  //   form.setValue("field", e.target.value);
-  // };
-  // const onChangeRoleHandler = async (e: { target: { value: string } }) => {
-  //   form.setValue("role", e.target.value);
-  // };
-  // const onChangeWorksHandler = async (e: { target: { value: string } }) => {
-  //   form.setValue("url", e.target.value);
-  // };
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
@@ -127,7 +111,6 @@ export function ProfileEdittingForm({
               <FormControl>
                 <Input placeholder="名前を入力してください" 
                 {...field} 
-                // onChange={onChangeUsernameHandler}
                 // disabled
               />
               </FormControl>
@@ -297,7 +280,6 @@ export function ProfileEdittingForm({
               <FormControl>
                 <Input placeholder="URLを入力してください"
                 {...field} 
-                // onChange={onChangeWorksHandler}
                 // disabled
               />
               </FormControl>
