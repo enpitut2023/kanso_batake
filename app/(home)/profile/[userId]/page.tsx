@@ -7,7 +7,6 @@ const page = async(
   { params: { userId }} : { params : { userId: string }}
 ) => {
   const user = await fetchUser(userId);
-  console.log(user?.id)
   if(!user){
     console.log("null")
     return null
