@@ -9,6 +9,7 @@ import {
 
 import { fetchUser } from '@/actions/user.action'
 import { currentUser } from '@clerk/nextjs';
+import Link from 'next/link';
 
 const ReviewHeader = async (
 	{ userId } : {userId: string}
@@ -35,10 +36,10 @@ const ReviewHeader = async (
 					})}
 			</div>
 			<div className="flex flex-row-reverse leading-normal text-blue-600 hover:text-blue-400 hover:underline">
-				{userId == currentuser?.id && (
-				<a href={`/profile/${userId}`} target="">
-					ユーザ情報を編集する
-				</a>
+				{userId === currentuser?.id && (
+					<Link href={`/profile/${userId}`}>
+						ユーザ情報を編集する
+					</Link>
 				)}
 			</div>
 		</CardHeader>

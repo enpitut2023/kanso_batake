@@ -95,6 +95,7 @@ export function ProfileEdittingForm({
       await updateUser(userData);
     } catch (error) {
       console.log(error);
+      throw new Error("Failed to update User info.");
     }
     router.push(`/user/${user.id}`);
   }
