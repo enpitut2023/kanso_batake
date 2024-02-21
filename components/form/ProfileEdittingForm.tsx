@@ -99,9 +99,9 @@ export function ProfileEdittingForm({
     router.push(`/user/${user.id}`);
   }
 
-  const onChangeUsernameHandler = async (e: { target: { value: string } }) => {
-    form.setValue("username", e.target.value);
-  };
+  // const onChangeUsernameHandler = async (e: { target: { value: string } }) => {
+  //   form.setValue("username", e.target.value);
+  // };
   // const onChangeAffiliationHandler = async (e: { target: { value: string } }) => {
   //   form.setValue("affiliation", e.target.value);
   // };
@@ -111,9 +111,9 @@ export function ProfileEdittingForm({
   // const onChangeRoleHandler = async (e: { target: { value: string } }) => {
   //   form.setValue("role", e.target.value);
   // };
-  const onChangeWorksHandler = async (e: { target: { value: string } }) => {
-    form.setValue("url", e.target.value);
-  };
+  // const onChangeWorksHandler = async (e: { target: { value: string } }) => {
+  //   form.setValue("url", e.target.value);
+  // };
 
   return (
     <Form {...form}>
@@ -128,7 +128,7 @@ export function ProfileEdittingForm({
                 <Input placeholder="名前を入力してください" 
                 {...field} 
                 // onChange={onChangeUsernameHandler}
-                
+                // disabled
               />
               </FormControl>
               <FormMessage />
@@ -155,7 +155,7 @@ export function ProfileEdittingForm({
                         "w-full justify-between",
                         !field.value && "text-muted-foreground"
                       )}
-                      
+                      // disabled
                     >
                       {field.value
                         ? affiliations.find(
@@ -272,7 +272,7 @@ export function ProfileEdittingForm({
               <Select 
                 onValueChange={field.onChange} 
                 defaultValue={field.value} 
-                
+                // disabled
                 >
                 <FormControl>
                   <SelectTrigger>
@@ -298,7 +298,7 @@ export function ProfileEdittingForm({
                 <Input placeholder="URLを入力してください"
                 {...field} 
                 // onChange={onChangeWorksHandler}
-                
+                // disabled
               />
               </FormControl>
               <FormMessage />
