@@ -31,7 +31,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { fetchUser, setUser } from "@/actions/user.action";
+import { fetchUser, setUser, updateUser } from "@/actions/user.action";
 import {
   Select,
   SelectContent,
@@ -91,9 +91,12 @@ export function ProfileEdittingForm({
       works: [data.url || ""],
     };
 
-    // await setUser();
-    // await updateuser(userData);
-    router.push("/");
+    try {
+      await updateUser(userData);
+    } catch (error) {
+      console.log(error);
+    }
+    router.push(`/user/${user.id}`);
   }
 
   const onChangeUsernameHandler = async (e: { target: { value: string } }) => {
@@ -124,8 +127,8 @@ export function ProfileEdittingForm({
               <FormControl>
                 <Input placeholder="名前を入力してください" 
                 {...field} 
-                onChange={onChangeUsernameHandler}
-                disabled
+                // onChange={onChangeUsernameHandler}
+                
               />
               </FormControl>
               <FormMessage />
@@ -152,7 +155,7 @@ export function ProfileEdittingForm({
                         "w-full justify-between",
                         !field.value && "text-muted-foreground"
                       )}
-                      disabled
+                      
                     >
                       {field.value
                         ? affiliations.find(
@@ -266,7 +269,11 @@ export function ProfileEdittingForm({
           render={({ field }) => (
             <FormItem>
               <FormLabel className="flex flex-row gap-1">役職<p className="text-red-600">*</p></FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value} disabled>
+              <Select 
+                onValueChange={field.onChange} 
+                defaultValue={field.value} 
+                
+                >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="役職を選択" />
@@ -290,8 +297,8 @@ export function ProfileEdittingForm({
               <FormControl>
                 <Input placeholder="URLを入力してください"
                 {...field} 
-                onChange={onChangeWorksHandler}
-                disabled
+                // onChange={onChangeWorksHandler}
+                
               />
               </FormControl>
               <FormMessage />
@@ -299,13 +306,13 @@ export function ProfileEdittingForm({
           )}
         />
         {isLoading.current ? (
-          <Button disabled>
+          <Button>
             <Loader2 className="animate-spin" />
             Please wait
           </Button>
         ) : (
           <div className="flex flex-row gap-3">
-            <Button type="submit" disabled>Submit</Button>
+            <Button type="submit">Submit</Button>
           </div>
         )}
       </form>
