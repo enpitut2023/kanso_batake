@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { boolean } from "zod";
  
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -15,4 +16,12 @@ export function delEmpty_tag(tag: string): string[] {
     tags = tags.filter(item => item.trim() !== '');
   }
   return tags
+}
+
+export async function checkInStringArray(el: string, array: string[]) {
+    let result = false;
+    array.forEach(a => {
+        if (a == el) result = true;
+    })
+    return result;
 }
