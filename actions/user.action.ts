@@ -51,15 +51,15 @@ export async function setUser(userData: userType) {
   }
 }
 
-//userIdさんと同じ分野を持つ別人たちを返す。返り値は、userType[].
-export async function getSameFieldUsers(userId: string) {
-  let user=fetchUser(userId) as unknown;
-  let user_:userType = user as userType;
-  let users:userType[]=[];
+export async function getUsersbyUserField(userId: string) {
+  const user=await fetchUser(userId);
+  const users:userType[]=[];
   try{
     const usersSnapshot = await getDocs(collection(db, "users"));
     usersSnapshot.forEach((doc) => {
-      if(doc.id!=userId && (doc.data() as userType).field==user_.field){
+      //userIdさんと別人かつ同じ分野の人か？
+      if(doc.id!=userId && (doc.data() as userType).field==user.field){
+        //同じならusersにプッシュする
         users.push(doc.data() as userType)
       }
     });
