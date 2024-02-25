@@ -13,8 +13,7 @@ export default async function Home({
     };}
 ) {
     const _user = await currentUser();
-    let userInfo = null;
-    if (_user) userInfo = await fetchUser(_user.id)
+    const userInfo = _user ? await fetchUser(_user.id) : null;
   return (
     <div className="flex flex-col gap-10 mt-2">
       <div className="flex flex-row gap-20">

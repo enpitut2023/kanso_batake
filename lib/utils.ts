@@ -19,9 +19,8 @@ export function delEmpty_tag(tag: string): string[] {
 }
 
 export async function checkInStringArray(el: string, array: string[]) {
-    let result = false;
     array.forEach(a => {
-        if (a == el) result = true;
+        if (a == el) return true;
     })
-    return result;
+    return false;
 }
