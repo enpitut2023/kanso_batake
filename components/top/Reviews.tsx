@@ -3,7 +3,7 @@ import React from "react";
 import Review from "../Review";
 
 const Reviews = async ({ fields, tag }: { fields?: string[], tag?: string }) => {
-  const reviewsData = await fetchReviewsByFields(fields, tag);
+  const reviewsData = tag ? await fetchReviewsByFilter(tag):await fetchReviewsByFields(fields);
 
   return (
     <>

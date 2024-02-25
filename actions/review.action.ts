@@ -179,7 +179,7 @@ export async function fetchReviewsByUserIds(userIds: string[], tag?: string) {
   }
 }
 
-export async function fetchReviewsByFields(fields?: string[], tag?:string) {
+export async function fetchReviewsByFields(fields?: string[]) {
     /*
     * fieldsがある場合、fieldでフィルタした結果を取得
     * fieldsがない場合、すべてのreviewをid順に取得
@@ -199,17 +199,8 @@ export async function fetchReviewsByFields(fields?: string[], tag?:string) {
     try {
         const allReviewsSnapshot = await getDocs(col);
         allReviewsSnapshot.forEach(async (doc) => {
-            tmp = doc.data() as reviewType;
-            // tagがある場合、tagでフィルタリング
-            if (tag) {
-                if (await checkInStringArray(tag, tmp.tags)) {
-                    result.push(tmp);
-                }
-            } else {
-                result.push(tmp);
-            }
+            result.push(doc.data() as reviewType);
         });
-
         return result;
     } catch (error) {
         console.log(error);
